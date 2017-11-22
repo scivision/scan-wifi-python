@@ -16,26 +16,28 @@ from datetime import datetime
 from time import sleep
 
 URL='https://location.services.mozilla.com/v1/geolocate?key=test'
-NMCMD = ['nmcli','-fields','SSID,BSSID,FREQ,SIGNAL','device','wifi']
+NMCMD = ['nmcli','-g','SSID,BSSID,FREQ,SIGNAL','device','wifi']
 NMSCAN = ['nmcli','device','wifi','rescan']
 
 
 def get_nmcli():
 
-    
+
     ret = subprocess.check_output(NMCMD)
     sleep(0.5) # nmcli crashed for less than about 0.2 sec.
     try:
         subprocess.check_call(NMSCAN) # takes several seconds to update, so do it now.
     except subprocess.CalledProcessError as e:
         print('consider slowing scan cadence.  {}'.format(e))
-    
-    dat = pandas.read_csv(BytesIO(ret), sep='\s+', index_col=False,
-                          header=0,usecols=[0,1,2,4], encoding='utf8',
-                          names=['ssid','macAddress','frequency','signalStrength'])
+
+    dat = pandas.read_csv(BytesIO(ret), sep=r'(?<!\\):', index_col=False,
+                          header=0, encoding='utf8',engine='python',
+                          dtype=str,usecols=[0,1,3],
+                          names=['ssid','macAddress','signalStrength'])
 # %% optout
     dat = dat[~dat['ssid'].str.endswith('_nomap')]
-# %% JSON    
+    dat['macAddress'] = dat['macAddress'].str.replace(r'\\:',':')
+# %% JSON
     jdat = dat.to_json(orient='records')
     jdat = '{ "wifiAccessPoints":' + jdat + '}'
 #    print(jdat)
@@ -43,16 +45,18 @@ def get_nmcli():
     try:
         req = requests.post(URL, data=jdat)
         if req.status_code != 200:
-            logging.error(ret.text)
+            logging.error(req.text)
+            return
     except requests.exceptions.ConnectionError as e:
-        logging.error('no network connection.  {}'.format(e))  
+        logging.error('no network connection.  {}'.format(e))
+        return
 # %% process MLS response
     jres = req.json()
     loc = jres['location']
     loc['accuracy'] = jres['accuracy']
     loc['N'] = dat.shape[0] # number of BSSIDs used
     loc['t'] = datetime.now()
-    
+
     return loc
 
 
@@ -75,7 +79,10 @@ if __name__ == '__main__':
     print('updating every {} seconds'.format(T))
     while True:
         loc = get_nmcli()
-        
+        if loc is None:
+            sleep(T)
+            continue
+
         stat = '{} {} {} {} {}'.format(loc['t'].strftime('%xT%X'),
                             loc['lat'], loc['lng'], loc['accuracy'], loc['N'])
         print(stat)
