@@ -8,6 +8,7 @@ Don't abuse the API or you'll get banned (excessive polling rate)
 Uses ``nmcli`` from Linux only. Could be extended to other tools and OS.
 """
 import subprocess
+import logging
 from io import BytesIO
 import pandas
 import requests
@@ -15,23 +16,43 @@ from datetime import datetime
 from time import sleep
 
 URL='https://location.services.mozilla.com/v1/geolocate?key=test'
+NMCMD = ['nmcli','-fields','BSSID,FREQ,SIGNAL','device','wifi']
+NMSCAN = ['nmcli','device','wifi','rescan']
+
 
 def get_nmcli():
 
-    cmd =['nmcli','-fields','BSSID,FREQ,SIGNAL','device','wifi']
-    ret = subprocess.check_output(cmd)
-
+    
+    ret = subprocess.check_output(NMCMD)
+    sleep(0.5) # nmcli crashed for less than about 0.2 sec.
+    try:
+        subprocess.check_call(NMSCAN) # takes several seconds to update, so do it now.
+    except subprocess.CalledProcessError as e:
+        print('consider slowing scan cadence.  {}'.format(e))
+    
     dat = pandas.read_csv(BytesIO(ret), sep='\s+', index_col=False,
                           header=0,usecols=[0,1,3],
                           names=['macAddress','frequency','signalStrength'])
+# %% JSON    
     jdat = dat.to_json(orient='records')
     jdat = '{ "wifiAccessPoints":' + jdat + '}'
 #    print(jdat)
-    req = requests.post(URL, data=jdat)
-    if req.status_code != 200:
-        raise RuntimeError(ret.text)
+# %% cloud MLS
+    try:
+        req = requests.post(URL, data=jdat)
+        if req.status_code != 200:
+            logging.error(ret.text)
+    except requests.exceptions.ConnectionError as e:
+        logging.error('no network connection.  {}'.format(e))  
+# %% process MLS response
+    jres = req.json()
+    loc = jres['location']
+    loc['accuracy'] = jres['accuracy']
+    loc['N'] = dat.shape[0] # number of BSSIDs used
+    loc['t'] = datetime.now()
+    
+    return loc
 
-    return req.json()
 
 if __name__ == '__main__':
     """
@@ -45,16 +66,16 @@ if __name__ == '__main__':
     p.add_argument('logfile',help='logfile to append location to',nargs='?')
     p = p.parse_args()
 
-    T = 60  # fastest allowed polling cadence is 1 minute
+    T = 25  # nmcli fastest allowed polling cadence: crashes at 20 sec. OK at 25 sec?
 
     logfile = p.logfile
 
     print('updating every {} seconds'.format(T))
     while True:
-        ret = get_nmcli()
-        loc = ret['location']
-        stat = '{} {} {} {}'.format(datetime.now().strftime('%xT%X'),
-                            loc['lat'], loc['lng'], ret['accuracy'])
+        loc = get_nmcli()
+        
+        stat = '{} {} {} {} {}'.format(loc['t'].strftime('%xT%X'),
+                            loc['lat'], loc['lng'], loc['accuracy'], loc['N'])
         print(stat)
 
         if logfile:
