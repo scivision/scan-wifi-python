@@ -36,6 +36,8 @@ def get_nmcli():
                           names=['ssid','macAddress','signalStrength'])
 # %% optout
     dat = dat[~dat['ssid'].str.endswith('_nomap')]
+# %% cleanup
+    dat['ssid'] = dat['ssid'].str.replace('nan','')
     dat['macAddress'] = dat['macAddress'].str.replace(r'\\:',':')
 # %% JSON
     jdat = dat.to_json(orient='records')
