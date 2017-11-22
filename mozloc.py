@@ -11,6 +11,8 @@ import subprocess
 from io import BytesIO
 import pandas
 import requests
+from datetime import datetime
+from time import sleep
 
 URL='https://location.services.mozilla.com/v1/geolocate?key=test'
 
@@ -35,7 +37,28 @@ if __name__ == '__main__':
     """
     output: lat lon [deg] accuracy [m]
     """
-    ret = get_nmcli()
-    loc = ret['location']
+    import signal
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-    print(loc['lat'], loc['lng'], ret['accuracy'])
+    from argparse import ArgumentParser
+    p = ArgumentParser()
+    p.add_argument('logfile',help='logfile to append location to',nargs='?')
+    p = p.parse_args()
+
+    T = 60  # fastest allowed polling cadence is 1 minute
+
+    logfile = p.logfile
+
+    print('updating every {} seconds'.format(T))
+    while True:
+        ret = get_nmcli()
+        loc = ret['location']
+        stat = '{} {} {} {}'.format(datetime.now().strftime('%xT%X'),
+                            loc['lat'], loc['lng'], ret['accuracy'])
+        print(stat)
+
+        if logfile:
+            with open(logfile,'a') as f:
+                f.write(stat+'\n')
+
+        sleep(T)
