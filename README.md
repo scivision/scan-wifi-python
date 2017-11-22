@@ -8,12 +8,24 @@ Linux system with NetworkManager (e.g. Ubuntu, Raspberry Pi, etc.).
 
     pip install pandas requests
 
+
 ## Usage
 
     ./mozloc.py
 
 Returns `dict` containing `lat` `lng` `accuracy`.
 In urban areas, accuracy ~ 100 meters.
+
+
+### convert to KML
+You can display your logged data in Google Earth or other KML value after converting by
+
+    ./csv2kml.py in.log out.kml
+    
+with
+    
+    pip install simplekml
+    
 
 ## Contributing
 Pull request if you have another favorite approach.
