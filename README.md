@@ -36,3 +36,21 @@ Would like to add Bluetooth, should be simple.
 
 * [Inspired by](https://github.com/flyinva/mozlosh)
 * [Alternative using Skyhook and geoclue](https://github.com/scivision/python-geoclue)
+* [Raspberry Pi NetworkManager](https://raspberrypi.stackexchange.com/a/73816)
+
+### Raspberry Pi 3
+Debian comes without NetworkManager by default.
+Be careful as you lose Wifi password etc. by this procedure
+
+1. Install network manager and remove the old 
+   ```sh
+   sudo apt install network-manager   
+   sudo apt purge dhcpcd5
+   ```
+   reboot
+2. upon reboot, try
+   ```sh
+   nmcli dev wifi list
+   ```
+   you should see several wifi access points and signal.
+3. try the MLS geolocation program above.
