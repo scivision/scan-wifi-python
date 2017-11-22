@@ -16,7 +16,7 @@ from datetime import datetime
 from time import sleep
 
 URL='https://location.services.mozilla.com/v1/geolocate?key=test'
-NMCMD = ['nmcli','-fields','BSSID,FREQ,SIGNAL','device','wifi']
+NMCMD = ['nmcli','-fields','SSID,BSSID,FREQ,SIGNAL','device','wifi']
 NMSCAN = ['nmcli','device','wifi','rescan']
 
 
@@ -31,8 +31,10 @@ def get_nmcli():
         print('consider slowing scan cadence.  {}'.format(e))
     
     dat = pandas.read_csv(BytesIO(ret), sep='\s+', index_col=False,
-                          header=0,usecols=[0,1,3],
-                          names=['macAddress','frequency','signalStrength'])
+                          header=0,usecols=[0,1,2,4], encoding='utf8',
+                          names=['ssid','macAddress','frequency','signalStrength'])
+# %% optout
+    dat = dat[~dat['ssid'].str.endswith('_nomap')]
 # %% JSON    
     jdat = dat.to_json(orient='records')
     jdat = '{ "wifiAccessPoints":' + jdat + '}'
