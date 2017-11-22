@@ -16,14 +16,15 @@ from datetime import datetime
 from time import sleep
 
 URL='https://location.services.mozilla.com/v1/geolocate?key=test'
-NMCMD = ['nmcli','-g','SSID,BSSID,FREQ,SIGNAL','device','wifi']
+NMCMD = ['nmcli','-g','SSID,BSSID,FREQ,SIGNAL','device','wifi'] # Debian stretch, Ubuntu 17.10
+NMLEG = ['nmcli','-t','-f','SSID,BSSID,FREQ,SIGNAL','device','wifi'] # ubuntu 16.04
 NMSCAN = ['nmcli','device','wifi','rescan']
 
 
 def get_nmcli():
 
 
-    ret = subprocess.check_output(NMCMD)
+    ret = subprocess.check_output(NMLEG)
     sleep(0.5) # nmcli crashed for less than about 0.2 sec.
     try:
         subprocess.check_call(NMSCAN) # takes several seconds to update, so do it now.
@@ -72,9 +73,11 @@ if __name__ == '__main__':
     from argparse import ArgumentParser
     p = ArgumentParser()
     p.add_argument('logfile',help='logfile to append location to',nargs='?')
+    p.add_argument('-T','--cadence',help='how often to ping [sec]. Some laptops cannot go faster than 30 sec.',
+                    default=60,type=float)
     p = p.parse_args()
 
-    T = 25  # nmcli fastest allowed polling cadence: crashes at 20 sec. OK at 25 sec?
+    T = p.cadence
 
     logfile = p.logfile
 
@@ -82,7 +85,7 @@ if __name__ == '__main__':
     while True:
         loc = get_nmcli()
         if loc is None:
-            sleep(T)
+            sleep(p.T)
             continue
 
         stat = '{} {} {} {} {}'.format(loc['t'].strftime('%xT%X'),
