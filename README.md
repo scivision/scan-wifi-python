@@ -3,29 +3,33 @@ Uses nmcli on Linux in a short, simple Mozilla Location Services with Wifi from 
 Goal was to be as simple as possible.
 Works with Python 2.7 and 3.
 
-## prereqs
+## Install
+```sh
+python -m pip install -e .
+```
+
+### prereqs
 Linux system with NetworkManager (e.g. Ubuntu, Raspberry Pi, etc.).
 
-    pip install pandas requests
 
 
 ## Usage
 
     ./mozloc.py
 
-Returns `dict` containing `lat` `lng` `accuracy`.
-In urban areas, accuracy ~ 100 meters.
+Returns `dict` containing `lat` `lng` `accuracy` `N BSSIDs heard`.
+In urban areas, accuracy ~ 5 - 100 meters.
 
 
 ### convert to KML
 You can display your logged data in Google Earth or other KML value after converting by
 
     ./csv2kml.py in.log out.kml
-    
+
 with
-    
+
     pip install simplekml
-    
+
 
 ## Contributing
 Pull request if you have another favorite approach.
@@ -42,9 +46,9 @@ Would like to add Bluetooth, should be simple.
 Debian comes without NetworkManager by default.
 Be careful as you lose Wifi password etc. by this procedure
 
-1. Install network manager and remove the old 
+1. Install network manager and remove the old
    ```sh
-   sudo apt install network-manager   
+   sudo apt install network-manager
    sudo apt purge dhcpcd5
    ```
    reboot
