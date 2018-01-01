@@ -7,7 +7,7 @@ from setuptools import setup,find_packages
 setup(name='mozilla-location-python',
       packages=find_packages(),
       author='Michael Hirsch, Ph.D.',
-      version='0.1.0',
+      version='0.5.0',
       url='https://github.com/scivision/mozilla-location-python',
       long_description=open('README.md').read(),
       description='Using Mozilla Location services, log location vs. time using WiFi or convert to KML.',
