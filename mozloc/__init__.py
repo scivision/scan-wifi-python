@@ -13,7 +13,7 @@ NMLEG = ['nmcli','-t','-f','SSID,BSSID,FREQ,SIGNAL','device','wifi'] # ubuntu 16
 NMSCAN = ['nmcli','device','wifi','rescan']
 HEADER='time lat lon accuracy NumBSSIDs'
 
-
+# %%
 def logwifiloc(T:float, logfile:Path):
 
     if logfile:
@@ -30,7 +30,7 @@ def logwifiloc(T:float, logfile:Path):
             sleep(T)
             continue
 
-        stat = f'{loc["t"].strftime("%xT%X")} {loc["lat"]} {loc["lng"]} {loc["accuracy"]:.1f} {loc["N"]:02d}'
+        stat = f'{loc["t"].isoformat(timespec="seconds")} {loc["lat"]} {loc["lng"]} {loc["accuracy"]:.1f} {loc["N"]:02d}'
         print(stat)
 
         if logfile:
@@ -39,14 +39,14 @@ def logwifiloc(T:float, logfile:Path):
 
         sleep(T)
 
-
+# %%
 def get_nmcli():
 
 
-    ret = subprocess.check_output(NMLEG, universal_newlines=True)
+    ret = subprocess.check_output(NMLEG, universal_newlines=True, timeout=1.)
     sleep(0.5) # nmcli crashed for less than about 0.2 sec.
     try:
-        subprocess.check_call(NMSCAN) # takes several seconds to update, so do it now.
+        subprocess.check_call(NMSCAN, timeout=1.) # takes several seconds to update, so do it now.
     except subprocess.CalledProcessError as e:
         logging.error(f'consider slowing scan cadence.  {e}')
 
@@ -101,14 +101,12 @@ def csv2kml(csvfn:Path, kmlfn:Path):
 # %% write KML
     """
     http://simplekml.readthedocs.io/en/latest/geometries.html#gxtrack
+    https://simplekml.readthedocs.io/en/latest/kml.html#id1
+    https://simplekml.readthedocs.io/en/latest/geometries.html#simplekml.GxTrack
     """
-    kml = Kml(name='My Kml',open=1)
-
-
-    doc = kml.newdocument(name='Mozilla Location Services')
-    fol = doc.newfolder(name='Tracks')
-    trk = fol.newgxtrack(name='My Track')
-    trk.newwhen(t)  # list of times
+    kml = Kml(name='My Kml')
+    trk = kml.newgxtrack(name='My Track')
+    trk.newwhen(t)  # list of times. MUST be format 2010-05-28T02:02:09Z
     trk.newgxcoord(lla.tolist()) #list of lon,lat,alt, NOT ndarray!
 
 # just a bunch of points

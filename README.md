@@ -1,7 +1,7 @@
 # mozilla-location-python
 Uses nmcli on Linux in a short, simple Mozilla Location Services with Wifi from Python.
 Goal was to be as simple as possible.
-Works with Python 2.7 and 3.
+Works with Python &ge; 3.6.
 
 ## Install
 ```sh
@@ -15,7 +15,7 @@ Linux system with NetworkManager (e.g. Ubuntu, Raspberry Pi, etc.).
 
 ## Usage
 
-    ./mozloc.py
+    ./MozLoc.py
 
 Returns `dict` containing `lat` `lng` `accuracy` `N BSSIDs heard`.
 In urban areas, accuracy ~ 5 - 100 meters.
@@ -29,6 +29,11 @@ You can display your logged data in Google Earth or other KML value after conver
 with
 
     pip install simplekml
+    
+Note that your time MUST be in ISO 8601 format or some KML reading programs such as Google Earth will just show a blank file.
+E.g.
+
+2016-07-24T12:34:56
 
 
 ## Contributing
