@@ -1,3 +1,8 @@
+
+[![Build Status](https://travis-ci.com/scivision/mozilla-location-python.svg?branch=master)](https://travis-ci.com/scivision/mozilla-location-python)
+
+[![Coverage Status](https://coveralls.io/repos/github/scivision/mozilla-location-wifi-python/badge.svg?branch=master)](https://coveralls.io/github/scivision/mozilla-location-wifi-python?branch=master)
+
 [![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
 
 [![Distribution format (PyPI)](https://img.shields.io/pypi/format/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
