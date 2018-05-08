@@ -3,12 +3,12 @@ from numpy.testing import run_module_suite
 import mozloc
 import datetime
 
-def test_nm_connection():
+def test_nm_loc():
     loc = mozloc.get_nmcli()
     assert isinstance(loc,dict)
     assert isinstance(loc['t'],datetime.datetime)
 
-def test_nm_loc():
+def test_nm_connection():
     mozloc.nm_config_check()
 
 
