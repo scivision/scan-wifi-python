@@ -1,0 +1,34 @@
+language: python
+fast_finish: true
+
+python:
+  - 3.6
+  
+os:
+  - linux
+  
+group: travis_latest
+
+git:
+  depth: 3
+  
+  
+addons:
+  apt:
+    packages:
+      - network-manager
+
+
+install: 
+  - pip -q install -e .[tests]
+
+
+script: 
+  - pytest -v
+
+after_success: 
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.6* ]]; then
+    coverage run tests/test_all.py;
+    coveralls;
+    fi
+

@@ -8,7 +8,7 @@ from time import sleep
 from pathlib import Path
 #
 URL='https://location.services.mozilla.com/v1/geolocate?key=test'
-NMCMD = ['nmcli','-g','SSID,BSSID,FREQ,SIGNAL','device','wifi'] # Debian stretch, Ubuntu 17.10
+NMCMD = ['nmcli','-g','SSID,BSSID,FREQ,SIGNAL','device','wifi'] # Debian stretch, Ubuntu 18.04
 NMLEG = ['nmcli','-t','-f','SSID,BSSID,FREQ,SIGNAL','device','wifi'] # ubuntu 16.04
 NMSCAN = ['nmcli','device','wifi','rescan']
 HEADER='time lat lon accuracy NumBSSIDs'
@@ -24,6 +24,9 @@ def logwifiloc(T:float, logfile:Path):
 
     print(f'updating every {T} seconds')
     print(HEADER)
+
+    nm_config_check()
+    sleep(0.5) # nmcli errored for less than about 0.2 sec.
     while True:
         loc = get_nmcli()
         if loc is None:
@@ -39,12 +42,20 @@ def logwifiloc(T:float, logfile:Path):
 
         sleep(T)
 
+def nm_config_check():
+# %% check that NetworkManager CLI is available and WiFi is active
+    try:
+        ret = subprocess.check_output(['nmcli','-t','radio','wifi'], universal_newlines=True, timeout=1.).strip().split(':')
+    except FileNotFoundError:
+        raise OSError('CUrrently this program relies on NetworkManager')
+
+    assert 'enabled' in ret and not 'disabled' in ret,'must enable WiFi, perhaps via nmcli radio wifi on'
+
 # %%
-def get_nmcli():
+def get_nmcli() -> dict:
 
-
-    ret = subprocess.check_output(NMLEG, universal_newlines=True, timeout=1.)
-    sleep(0.5) # nmcli crashed for less than about 0.2 sec.
+    ret = subprocess.check_output(NMCMD, universal_newlines=True, timeout=1.)
+    sleep(0.5) # nmcli errored for less than about 0.2 sec.
     try:
         subprocess.check_call(NMSCAN, timeout=1.) # takes several seconds to update, so do it now.
     except subprocess.CalledProcessError as e:

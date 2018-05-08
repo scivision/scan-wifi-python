@@ -1,7 +1,13 @@
+[![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
+
+[![Distribution format (PyPI)](https://img.shields.io/pypi/format/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
+
 # mozilla-location-python
 Uses nmcli on Linux in a short, simple Mozilla Location Services with Wifi from Python.
 Goal was to be as simple as possible.
-Works with Python &ge; 3.6.
+
+Note that a similar service with better accuracy is available from [Google](https://developers.google.com/maps/documentation/geolocation/intro).
+Let us know if you're interested.
 
 ## Install
 ```sh
@@ -14,10 +20,11 @@ Linux system with NetworkManager (e.g. Ubuntu, Raspberry Pi, etc.).
 
 
 ## Usage
+```sh
+./MozLoc.py
+```
 
-    ./MozLoc.py
-
-Returns `dict` containing `lat` `lng` `accuracy` `N BSSIDs heard`.
+Returns `dict()` containing `lat` `lng` `accuracy` `N BSSIDs heard`.
 In urban areas, accuracy ~ 5 - 100 meters.
 
 
@@ -53,8 +60,8 @@ Be careful as you lose Wifi password etc. by this procedure
 
 1. Install network manager and remove the old
    ```sh
-   sudo apt install network-manager
-   sudo apt purge dhcpcd5
+   apt install network-manager
+   apt purge dhcpcd5
    ```
    reboot
 2. upon reboot, try
