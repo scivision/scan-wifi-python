@@ -1,5 +1,7 @@
 [![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
 [![Distribution format (PyPI)](https://img.shields.io/pypi/format/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
+[![PyPi Download stats](http://pepy.tech/badge/mozilla-location-python)](http://pepy.tech/project/mozilla-location-python)
+
 
 # mozilla-location-python
 Uses nmcli on Linux in a short, simple Mozilla Location Services with Wifi from Python.

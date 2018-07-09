@@ -1,8 +1,12 @@
 import pytest
-from simplekml import Kml
-    
+try:
+    from simplekml import Kml
+except ImportError:
+    Kml = None
 
-def gen_kml():
+
+@pytest.mark.skipif(Kml is None, reason="SimpleKML wasn't installed")
+def test_kml():
     # Data for the track
     when = ["2010-05-28T02:02:09Z",
             "2010-05-28T02:02:35Z",
@@ -27,7 +31,7 @@ def gen_kml():
     trk.newgxcoord(coord)
 
     kml.save('Test.kml')
-    
+
 
 if __name__ == '__main__':
     pytest.main()
