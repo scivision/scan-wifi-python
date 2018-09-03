@@ -1,12 +1,11 @@
 import pytest
-try:
-    from simplekml import Kml
-except ImportError:
-    Kml = None
+from pathlib import Path
+
+R = Path(__file__).parent
 
 
-@pytest.mark.skipif(Kml is None, reason="SimpleKML wasn't installed")
 def test_kml():
+    simplekml = pytest.importorskip('simplekml')
     # Data for the track
     when = ["2010-05-28T02:02:09Z",
             "2010-05-28T02:02:35Z",
@@ -24,14 +23,14 @@ def test_kml():
              (-122.203329, 37.374780, 141.199997),
              (-122.203207, 37.374857, 140.199997)]
 
-    kml = Kml(name="Tracks",)
+    kml = simplekml.Kml(name="Tracks",)
     trk = kml.newgxtrack(name='test')
 
     trk.newwhen(when)
     trk.newgxcoord(coord)
 
-    kml.save('Test.kml')
+    kml.save(R/'Test.kml')
 
 
 if __name__ == '__main__':
-    pytest.main()
+    pytest.main(['-xrsv', __file__])

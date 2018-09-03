@@ -7,7 +7,8 @@
 Uses nmcli on Linux in a short, simple Mozilla Location Services with Wifi from Python.
 Goal was to be as simple as possible.
 
-Note that a similar service with better accuracy is available from [Google](https://developers.google.com/maps/documentation/geolocation/intro).
+Note that a similar service with better accuracy is available from 
+[Google](https://developers.google.com/maps/documentation/geolocation/intro).
 Let us know if you're interested.
 
 ## Install
@@ -55,7 +56,7 @@ Would like to add Bluetooth, should be simple.
 * [Alternative using Skyhook and geoclue](https://github.com/scivision/python-geoclue)
 * [Raspberry Pi NetworkManager](https://raspberrypi.stackexchange.com/a/73816)
 
-### Raspberry Pi 3
+### Raspberry Pi 3 / Zero W
 Debian comes without NetworkManager by default.
 Be careful as you lose Wifi password etc. by this procedure
 
