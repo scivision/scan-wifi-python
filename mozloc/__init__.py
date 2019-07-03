@@ -3,15 +3,20 @@ import logging
 from io import StringIO
 import pandas
 import requests
+import shutil
 from datetime import datetime
 from time import sleep
 from pathlib import Path
 from typing import Dict, Any, Optional
-#
+
+NMCLI = shutil.which('nmcli')
+if not NMCLI:
+    raise ImportError('This program relies on NetworkManager via "nmcli"')
+
 URL = 'https://location.services.mozilla.com/v1/geolocate?key=test'
-NMCMD = ['nmcli', '-g', 'SSID,BSSID,FREQ,SIGNAL', 'device', 'wifi']  # Debian stretch, Ubuntu 18.04
-NMLEG = ['nmcli', '-t', '-f', 'SSID,BSSID,FREQ,SIGNAL', 'device', 'wifi']  # ubuntu 16.04
-NMSCAN = ['nmcli', 'device', 'wifi', 'rescan']
+NMCMD = [NMCLI, '-g', 'SSID,BSSID,FREQ,SIGNAL', 'device', 'wifi']  # Debian stretch, Ubuntu 18.04
+NMLEG = [NMCLI, '-t', '-f', 'SSID,BSSID,FREQ,SIGNAL', 'device', 'wifi']  # ubuntu 16.04
+NMSCAN = [NMCLI, 'device', 'wifi', 'rescan']
 HEADER = 'time lat lon accuracy NumBSSIDs'
 
 # %%
@@ -47,14 +52,10 @@ def logwifiloc(T: float, logfile: Path):
 
 def nm_config_check():
     # %% check that NetworkManager CLI is available and WiFi is active
-    try:
-        ret = subprocess.check_output(['nmcli', '-t', 'radio', 'wifi'], universal_newlines=True, timeout=1.).strip().split(':')
-    except FileNotFoundError:
-        raise OSError('CUrrently this program relies on NetworkManager')
+    ret = subprocess.check_output([NMCLI, '-t', 'radio', 'wifi'], universal_newlines=True, timeout=1.).strip().split(':')
 
-    assert 'enabled' in ret and 'disabled' not in ret, 'must enable WiFi, perhaps via nmcli radio wifi on'
-
-# %%
+    if 'enabled' not in ret and 'disabled' in ret:
+        raise OSError('must enable WiFi, perhaps via nmcli radio wifi on')
 
 
 def get_nmcli() -> Optional[Dict[str, Any]]:

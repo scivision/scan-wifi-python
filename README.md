@@ -1,5 +1,5 @@
+[![Build Status](https://travis-ci.com/scivision/mozilla-location-wifi-python.svg?branch=master)](https://travis-ci.com/scivision/mozilla-location-wifi-python)
 [![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
-[![Distribution format (PyPI)](https://img.shields.io/pypi/format/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
 [![PyPi Download stats](http://pepy.tech/badge/mozilla-location-python)](http://pepy.tech/project/mozilla-location-python)
 
 
@@ -7,7 +7,7 @@
 Uses nmcli on Linux in a short, simple Mozilla Location Services with Wifi from Python.
 Goal was to be as simple as possible.
 
-Note that a similar service with better accuracy is available from 
+Note that a similar service with better accuracy is available from
 [Google](https://developers.google.com/maps/documentation/geolocation/intro).
 Let us know if you're interested.
 
@@ -38,7 +38,7 @@ You can display your logged data in Google Earth or other KML value after conver
 with
 
     pip install simplekml
-    
+
 Note that your time MUST be in ISO 8601 format or some KML reading programs such as Google Earth will just show a blank file.
 E.g.
 
