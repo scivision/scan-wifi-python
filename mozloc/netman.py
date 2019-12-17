@@ -9,17 +9,18 @@ from time import sleep
 import requests
 from datetime import datetime
 
+from .config import URL
+
 NMCLI = shutil.which("nmcli")
 if not NMCLI:
-    raise ImportError('This program relies on NetworkManager via "nmcli"')
+    raise ImportError('Could not find NetworkManager "nmcli"')
 
-URL = "https://location.services.mozilla.com/v1/geolocate?key=test"
 NMCMD = [NMCLI, "-g", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]  # Debian stretch, Ubuntu 18.04
 NMLEG = [NMCLI, "-t", "-f", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]  # ubuntu 16.04
 NMSCAN = [NMCLI, "device", "wifi", "rescan"]
 
 
-def nm_config_check():
+def cli_config_check():
     # %% check that NetworkManager CLI is available and WiFi is active
     ret = subprocess.check_output([NMCLI, "-t", "radio", "wifi"], universal_newlines=True, timeout=1.0).strip().split(":")
 
@@ -27,7 +28,7 @@ def nm_config_check():
         raise ConnectionError("must enable WiFi, perhaps via nmcli radio wifi on")
 
 
-def get_nmcli() -> typing.Dict[str, typing.Any]:
+def get_cli() -> typing.Dict[str, typing.Any]:
 
     ret = subprocess.run(NMCMD, timeout=1.0)
     if ret.returncode != 0:
@@ -51,6 +52,9 @@ def get_nmcli() -> typing.Dict[str, typing.Any]:
     )
     # %% optout
     dat = dat[~dat["ssid"].str.endswith("_nomap")]
+    if dat.shape[0] < 2:
+        logging.warning("cannot locate since at least 2 BSSIDs required")
+        return None
     # %% cleanup
     dat["ssid"] = dat["ssid"].str.replace("nan", "")
     dat["macAddress"] = dat["macAddress"].str.replace(r"\\:", ":")

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 """
 https://mozilla.github.io/ichnaea/api/geolocate.html
+https://ichnaea.readthedocs.io/en/latest/api/geolocate.html
+
 you should get your own Mozilla Location Services API key
 
 Don't abuse the API or you'll get banned (excessive polling rate)
-
-Uses ``nmcli`` from Linux only. Could be extended to other tools and OS.
 """
 from mozloc import log_wifi_loc
 from argparse import ArgumentParser

@@ -1,54 +1,56 @@
+# Mozilla Location Services from Python
+
 [![Build Status](https://travis-ci.com/scivision/mozilla-location-wifi-python.svg?branch=master)](https://travis-ci.com/scivision/mozilla-location-wifi-python)
 [![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
 [![PyPi Download stats](http://pepy.tech/badge/mozilla-location-python)](http://pepy.tech/project/mozilla-location-python)
 
+Uses command line access to WiFi information in a short, simple Mozilla Location Services with Wifi from Python.
+The command line programs used to access WiFi inforamtion include:
 
-# mozilla-location-python
-Uses nmcli on Linux in a short, simple Mozilla Location Services with Wifi from Python.
-Goal was to be as simple as possible.
+* Linux: `nmcli` [NetworkManager](https://developer.gnome.org/NetworkManager/stable/nmcli.html)
+* Windows: [`netsh`](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc755301(v=ws.10)?redirectedfrom=MSDN)
 
 Note that a similar service with better accuracy is available from
 [Google](https://developers.google.com/maps/documentation/geolocation/intro).
 Let us know if you're interested.
 
 ## Install
+
 ```sh
 python -m pip install -e .
 ```
 
-### prereqs
-Linux system with NetworkManager (e.g. Ubuntu, Raspberry Pi, etc.).
-
-
-
 ## Usage
+
 ```sh
-./MozLoc.py
+python MozLoc.py
 ```
 
 Returns `dict()` containing `lat` `lng` `accuracy` `N BSSIDs heard`.
 In urban areas, accuracy ~ 5 - 100 meters.
 
-
 ### convert to KML
-You can display your logged data in Google Earth or other KML value after converting by
 
-    ./csv2kml.py in.log out.kml
+Display logged data in Google Earth or other KML viewer after converting from CSV to KML:
 
-with
+```sh
+python csv2kml.py in.log out.kml
+```
 
-    pip install simplekml
+which uses
+
+```sh
+pip install simplekml
+```
 
 Note that your time MUST be in ISO 8601 format or some KML reading programs such as Google Earth will just show a blank file.
 E.g.
 
 2016-07-24T12:34:56
 
+## TODO
 
-## Contributing
-Pull request if you have another favorite approach.
-Would like to add Bluetooth, should be simple.
-
+Would like to add Bluetooth beacons.
 
 ## Notes
 
@@ -56,7 +58,8 @@ Would like to add Bluetooth, should be simple.
 * [Alternative using Skyhook and geoclue](https://github.com/scivision/python-geoclue)
 * [Raspberry Pi NetworkManager](https://raspberrypi.stackexchange.com/a/73816)
 
-### Raspberry Pi 3 / Zero W
+### Raspberry Pi 3 / 4 / Zero W
+
 Debian comes without NetworkManager by default.
 Be careful as you lose Wifi password etc. by this procedure
 

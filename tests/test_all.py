@@ -8,7 +8,7 @@ def test_nm_loc():
     mozloc = pytest.importorskip("mozloc")
 
     try:
-        loc = mozloc.netman.get_nmcli()
+        loc = mozloc.netman.get_cli()
     except subprocess.CalledProcessError as e:
         pytest.skip(f"problem with NMCLI API--old NMCLI version?  {e}")
 
@@ -20,7 +20,7 @@ def test_nm_connection():
     mozloc = pytest.importorskip("mozloc")
 
     try:
-        mozloc.netman.nm_config_check()
+        mozloc.netman.cli_config_check()
     except subprocess.CalledProcessError as e:
         pytest.skip(f"problem with NMCLI WiFi API--do you have WiFi?  {e}")
 
