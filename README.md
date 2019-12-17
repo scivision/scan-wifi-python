@@ -1,6 +1,7 @@
 # Mozilla Location Services from Python
 
-[![Build Status](https://travis-ci.com/scivision/mozilla-location-wifi-python.svg?branch=master)](https://travis-ci.com/scivision/mozilla-location-wifi-python)
+[![Actions Status](https://github.com/scivision/mozilla-location-wifi/workflows/ci/badge.svg)](https://github.com/scivision/mozilla-location-wifi/actions)
+
 [![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
 [![PyPi Download stats](http://pepy.tech/badge/mozilla-location-python)](http://pepy.tech/project/mozilla-location-python)
 
