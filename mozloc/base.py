@@ -17,7 +17,8 @@ def log_wifi_loc(T: float, logfile: Path):
     print(HEADER)
 
     cli_config_check()
-    sleep(0.5)  # nmcli errored for less than about 0.2 sec.
+    # nmcli errored for less than about 0.2 sec.
+    sleep(0.5)
     while True:
         loc = get_cli()
         if loc is None:
