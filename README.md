@@ -1,7 +1,6 @@
 # Mozilla Location Services from Python
 
-[![Actions Status](https://github.com/scivision/mozilla-location-wifi/workflows/ci/badge.svg)](https://github.com/scivision/mozilla-location-wifi/actions)
-
+![Actions Status](https://github.com/scivision/mozilla-location-wifi/workflows/ci/badge.svg)
 [![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
 [![PyPi Download stats](http://pepy.tech/badge/mozilla-location-python)](http://pepy.tech/project/mozilla-location-python)
 
@@ -29,6 +28,11 @@ python MozLoc.py
 
 Returns `dict()` containing `lat` `lng` `accuracy` `N BSSIDs heard`.
 In urban areas, accuracy ~ 5 - 100 meters.
+
+### Windows
+
+On Windows, NetSH is used.
+You may need to disconnect from WiFi (leave WiFi enabled) to make your WiFi chipset scan and be able to get location.
 
 ### convert to KML
 
@@ -58,6 +62,14 @@ Would like to add Bluetooth beacons.
 * [Inspired by](https://github.com/flyinva/mozlosh)
 * [Alternative using Skyhook and geoclue](https://github.com/scivision/python-geoclue)
 * [Raspberry Pi NetworkManager](https://raspberrypi.stackexchange.com/a/73816)
+
+### Windows
+
+To print verbose information about nearby WiFi:
+
+```posh
+netsh wlan show networks mode=bssid
+```
 
 ### Raspberry Pi 3 / 4 / Zero W
 
