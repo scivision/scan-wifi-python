@@ -1,7 +1,5 @@
 import pytest
-from pathlib import Path
-
-R = Path(__file__).parent
+import importlib.resources
 
 
 def test_kml():
@@ -33,8 +31,5 @@ def test_kml():
     trk.newwhen(when)
     trk.newgxcoord(coord)
 
-    kml.save(R / "Test.kml")
-
-
-if __name__ == "__main__":
-    pytest.main([__file__])
+    with importlib.resources.path("mozloc.tests", "Test.kml") as file:
+        kml.save(file)

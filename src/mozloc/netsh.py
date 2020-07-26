@@ -1,15 +1,10 @@
-""" Network Manager CLI (nmcli) functions """
+""" Windows NetSH functions """
 import subprocess
-import typing
+import typing as T
 import logging
 import shutil
 import io
-import requests
-import json
 from math import log10
-from datetime import datetime
-
-from .config import URL
 
 CLI = shutil.which("netsh")
 if not CLI:
@@ -18,27 +13,30 @@ if not CLI:
 CMD = [CLI, "wlan", "show", "networks", "mode=bssid"]
 
 
-def cli_config_check():
+def cli_config_check() -> bool:
     # %% check that NetSH CLI is available and WiFi is active
-    ret = subprocess.check_output(CMD, universal_newlines=True, timeout=1.0)
-    for line in ret.split("\n"):
+    ret = subprocess.run(CMD, stdout=subprocess.PIPE, text=True, timeout=2)
+    for line in ret.stdout.split("\n"):
         if "networks currently visible" in line:
-            return
+            return True
         if "The wireless local area network interface is powered down and doesn't support the requested operation" in line:
-            raise ConnectionError("must enable WiFi, it appears to be turned off.")
+            logging.error("must enable WiFi, it appears to be turned off.")
+            return False
+
     logging.error("could not determine WiFi state.")
+    return False
 
 
-def get_cli() -> typing.Dict[str, typing.Any]:
+def get_cli() -> T.List[T.Dict[str, T.Any]]:
     """ get signal strength using CLI """
-    ret = subprocess.run(CMD, timeout=1.0, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    ret = subprocess.run(CMD, timeout=1.0, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     if ret.returncode != 0:
         logging.error(f"consider slowing scan cadence.  {ret.stderr}")
 
-    dat: typing.List[typing.Dict[str, str]] = []
+    dat: T.List[T.Dict[str, str]] = []
     out = io.StringIO(ret.stdout)
     for line in out:
-        d: typing.Dict[str, str] = {}
+        d: T.Dict[str, str] = {}
         if not line.startswith("SSID"):
             continue
         ssid = line.split(":", 1)[1].strip()
@@ -53,36 +51,18 @@ def get_cli() -> typing.Dict[str, typing.Any]:
             for line in out:
                 if not line[9:15] == "Signal":
                     continue
-                signal_percent = int(line.split(":", 1)[1][:3])
+                try:
+                    signal_percent = int(line.split(":", 1)[1].split("%", 1)[0])
+                except ValueError:
+                    logging.error(line)
+                    break
                 d["signalStrength"] = str(signal_percent_to_dbm(signal_percent))
                 d["ssid"] = ssid
                 dat.append(d)
                 d = {}
                 break
-    if len(dat) < 2:
-        logging.warning("cannot locate since at least 2 BSSIDs required")
-        return None
-    # %% JSON
-    jdat = json.dumps(dat)
-    jdat = '{ "wifiAccessPoints":' + jdat + "}"
-    logging.debug(jdat)
-    # %% cloud MLS
-    try:
-        req = requests.post(URL, data=jdat)
-        if req.status_code != 200:
-            logging.error(req.text)
-            return None
-    except requests.exceptions.ConnectionError as e:
-        logging.error(f"no network connection.  {e}")
-        return None
-    # %% process MLS response
-    jres = req.json()
-    loc = jres["location"]
-    loc["accuracy"] = jres["accuracy"]
-    loc["N"] = len(dat)  # number of BSSIDs used
-    loc["t"] = datetime.now()
 
-    return loc
+    return dat
 
 
 def signal_percent_to_dbm(percent: int) -> int:
@@ -103,4 +83,5 @@ def signal_percent_to_dbm(percent: int) -> int:
     ref_mW = 10 ** (REF / 10) / 1000
     meas_mW = max(ref_mW * percent / 100, 1e-7)
     meas_dBm = 10 * log10(meas_mW) + 30
+
     return int(meas_dBm)
