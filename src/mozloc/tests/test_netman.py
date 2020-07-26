@@ -8,7 +8,7 @@ is_ci = os.environ.get("CI", "").lower() == "true"
 def test_nm_loc():
 
     mozloc = pytest.importorskip('mozloc')
-    loc = mozloc.get_cli()
+    loc = mozloc.get_signal()
 
     assert isinstance(loc, list)
     assert isinstance(loc[0], dict)

@@ -27,7 +27,7 @@ def cli_config_check() -> bool:
     return False
 
 
-def get_cli() -> T.List[T.Dict[str, T.Any]]:
+def get_signal() -> T.List[T.Dict[str, T.Any]]:
     """ get signal strength using CLI """
     ret = subprocess.run(CMD, timeout=1.0, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     if ret.returncode != 0:

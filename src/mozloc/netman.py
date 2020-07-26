@@ -38,7 +38,7 @@ nmcli radio wifi on"""
     return False
 
 
-def get_cli() -> T.List[T.Dict[str, T.Any]]:
+def get_signal() -> T.List[T.Dict[str, T.Any]]:
 
     ret = subprocess.run(NMCMD, timeout=1.0)
     if ret.returncode != 0:

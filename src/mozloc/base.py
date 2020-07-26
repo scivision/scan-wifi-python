@@ -2,7 +2,7 @@ from time import sleep
 from pathlib import Path
 import logging
 
-from .modules import get_cli, cli_config_check
+from .modules import get_signal, cli_config_check
 from .web import get_loc_mozilla
 
 HEADER = "time                lat        lon         accuracy NumBSSIDs"
@@ -23,7 +23,7 @@ def log_wifi_loc(cadence_sec: float, mozilla_url: str, logfile: Path = None):
     # nmcli errored for less than about 0.2 sec.
     sleep(0.5)
     while True:
-        dat = get_cli()
+        dat = get_signal()
         if len(dat) < 2:
             logging.warning(f"cannot locate since at least 2 BSSIDs required\n{dat}")
             sleep(cadence_sec)

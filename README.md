@@ -23,11 +23,17 @@ python -m pip install -e .
 ## Usage
 
 ```sh
-python MozLoc.py
+MozLoc
 ```
 
-Returns `dict()` containing `lat` `lng` `accuracy` `N BSSIDs heard`.
-In urban areas, accuracy ~ 5 - 100 meters.
+Shows `time` `lat` `lng` `accuracy` `N BSSIDs heard`.
+In urban areas, accuracy of less than 100 meters is possible.
+
+### dump raw signals
+
+```sh
+mozloc_signal
+```
 
 ### Windows
 

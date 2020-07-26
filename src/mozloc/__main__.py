@@ -7,18 +7,30 @@ you should get your own Mozilla Location Services API key
 
 Don't abuse the API or you'll get banned (excessive polling rate)
 """
+
 from .base import log_wifi_loc
+from .modules import get_signal
+
+import pandas
 from argparse import ArgumentParser
 
 
+def wifi_signal():
+
+    wifi = get_signal()
+    if isinstance(wifi, pandas.DataFrame):
+        print(wifi)
+    else:
+        # list of dict
+        for s in wifi:
+            print(s)
+
+
 def mozilla_location():
-    """
-    output: lat lon [deg] accuracy [m]
-    """
     p = ArgumentParser()
     p.add_argument("logfile", help="logfile to append location to", nargs="?")
     p.add_argument(
-        "-T", "--cadence", help="how often to ping [sec]. Some laptops cannot go faster than 30 sec.", default=60, type=float
+        "-T", "--cadence", help="how often to update [sec]. Some laptops cannot go faster than 30 sec.", default=60, type=float
     )
     p.add_argument(
         "-url",
