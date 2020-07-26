@@ -16,8 +16,17 @@ Let us know if you're interested.
 
 ## Install
 
+
+Get latest release
+
 ```sh
-python -m pip install -e .
+pip install mozloc
+```
+
+or for latest development version
+```sh
+git clone https://github.com/scivision/mozilla-location-wifi/
+pip install -e mozilla-location-wifi/
 ```
 
 ## Usage
