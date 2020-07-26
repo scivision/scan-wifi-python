@@ -1,11 +1,11 @@
 # Mozilla Location Services from Python
 
 ![Actions Status](https://github.com/scivision/mozilla-location-wifi/workflows/ci/badge.svg)
-[![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozilla-location-python.svg)](https://pypi.python.org/pypi/mozilla-location-python)
-[![PyPi Download stats](http://pepy.tech/badge/mozilla-location-python)](http://pepy.tech/project/mozilla-location-python)
+[![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozloc.svg)](https://pypi.python.org/pypi/mozloc)
+[![PyPi Download stats](http://pepy.tech/badge/mozloc)](http://pepy.tech/project/mozloc)
 
 Uses command line access to WiFi information in a short, simple Mozilla Location Services with Wifi from Python.
-The command line programs used to access WiFi inforamtion include:
+The command line programs used to access WiFi information include:
 
 * Linux: `nmcli` [NetworkManager](https://developer.gnome.org/NetworkManager/stable/nmcli.html)
 * Windows: [`netsh`](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc755301(v=ws.10)?redirectedfrom=MSDN)
