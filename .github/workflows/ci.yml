@@ -15,22 +15,7 @@ jobs:
       with:
         python-version: '3.x'
 
-    - run: pip install .[tests,lint]
+    - run: pip install .[lint]
 
     - run: flake8
     - run: mypy . src
-
-    - run: pytest
-
-
-  windows:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - run: pip install .[tests]
-
-    - run: pytest
