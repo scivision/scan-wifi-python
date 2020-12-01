@@ -18,4 +18,4 @@ jobs:
     - run: pip install .[lint]
 
     - run: flake8
-    - run: mypy . src
+    - run: mypy

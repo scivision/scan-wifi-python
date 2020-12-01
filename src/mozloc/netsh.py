@@ -66,7 +66,7 @@ def get_signal() -> T.List[T.Dict[str, T.Any]]:
 
 
 def signal_percent_to_dbm(percent: int) -> int:
-    """ arbitrary conversion factor from Windows WiFi signal % to dBm
+    """arbitrary conversion factor from Windows WiFi signal % to dBm
     assumes 100% is -30 dBm
 
     Parameters

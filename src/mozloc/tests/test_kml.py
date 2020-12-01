@@ -25,7 +25,9 @@ def test_kml():
         (-122.203207, 37.374857, 140.199997),
     ]
 
-    kml = simplekml.Kml(name="Tracks",)
+    kml = simplekml.Kml(
+        name="Tracks",
+    )
     trk = kml.newgxtrack(name="test")
 
     trk.newwhen(when)
