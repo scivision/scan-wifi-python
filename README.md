@@ -8,6 +8,7 @@ Uses command line access to WiFi information in a short, simple Mozilla Location
 The command line programs used to access WiFi information include:
 
 * Linux: `nmcli` [NetworkManager](https://developer.gnome.org/NetworkManager/stable/nmcli.html)
+* MacOS: `airport` built into MacOS
 * Windows: [`netsh`](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc755301(v=ws.10)?redirectedfrom=MSDN)
 
 Note that a similar service with better accuracy is available from
