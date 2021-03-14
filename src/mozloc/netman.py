@@ -1,10 +1,12 @@
 """ Network Manager CLI (nmcli) functions """
+
+from __future__ import annotations
+import typing as T
 import subprocess
 import logging
 import shutil
 import pandas
-import typing as T
-from io import StringIO
+import io
 from time import sleep
 
 NMCLI = shutil.which("nmcli")
@@ -38,19 +40,19 @@ nmcli radio wifi on"""
     return False
 
 
-def get_signal() -> T.List[T.Dict[str, T.Any]]:
+def get_signal() -> list[dict[str, T.Any]]:
 
     ret = subprocess.run(NMCMD, timeout=1.0)
     if ret.returncode != 0:
         raise ConnectionError("could not connect with NetworkManager for WiFi")
     sleep(0.5)  # nmcli errored for less than about 0.2 sec.
     # takes several seconds to update, so do it now.
-    ret = subprocess.run(NMSCAN, timeout=1.0, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    ret = subprocess.run(NMSCAN, timeout=1.0, stdout=subprocess.PIPE, text=True)
     if ret.returncode != 0:
-        logging.error(f"consider slowing scan cadence.  {ret.stderr}")
+        logging.error("consider slowing scan cadence.")
 
     dat = pandas.read_csv(
-        StringIO(ret.stdout),
+        io.StringIO(ret.stdout),
         sep=r"(?<!\\):",
         index_col=False,
         header=0,

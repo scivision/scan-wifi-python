@@ -1,6 +1,8 @@
 """ Windows NetSH functions """
-import subprocess
+
+from __future__ import annotations
 import typing as T
+import subprocess
 import logging
 import shutil
 import io
@@ -27,16 +29,16 @@ def cli_config_check() -> bool:
     return False
 
 
-def get_signal() -> T.List[T.Dict[str, T.Any]]:
+def get_signal() -> list[dict[str, T.Any]]:
     """ get signal strength using CLI """
-    ret = subprocess.run(CMD, timeout=1.0, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    ret = subprocess.run(CMD, timeout=1.0, stdout=subprocess.PIPE, text=True)
     if ret.returncode != 0:
-        logging.error(f"consider slowing scan cadence.  {ret.stderr}")
+        logging.error("consider slowing scan cadence.")
 
-    dat: T.List[T.Dict[str, str]] = []
+    dat: list[dict[str, str]] = []
     out = io.StringIO(ret.stdout)
     for line in out:
-        d: T.Dict[str, str] = {}
+        d: dict[str, str] = {}
         if not line.startswith("SSID"):
             continue
         ssid = line.split(":", 1)[1].strip()
