@@ -3,7 +3,6 @@
 from __future__ import annotations
 import typing as T
 import shutil
-import io
 import logging
 import subprocess
 import re
@@ -31,17 +30,22 @@ def cli_config_check() -> bool:
     return False
 
 
-def get_signal() -> list[dict[str, T.Any]]:
+def get_signal() -> str:
 
     ret = subprocess.run([EXE, "-s"], timeout=30.0, stdout=subprocess.PIPE, text=True)
 
     if ret.returncode != 0:
         logging.error("consider slowing scan cadence.")
 
+    return ret.stdout
+
+
+def parse_signal(raw: str) -> list[dict[str, T.Any]]:
+
     pat = re.compile(r"\s*([0-9a-zA-Z\-\.]+)\s+([0-9a-f]{2}(?::[0-9a-f]{2}){5})\s+(-\d{2,3})")
     dat: list[dict[str, str]] = []
 
-    for line in io.StringIO(ret.stdout):
+    for line in raw.split("\n"):
         mat = pat.match(line)
         if mat:
             ssid = mat.group(1)

@@ -1,7 +1,6 @@
 # Mozilla Location Services from Python
 
-![Actions Status](https://github.com/scivision/mozilla-location-wifi/workflows/ci/badge.svg)
-[![Python versions (PyPI)](https://img.shields.io/pypi/pyversions/mozloc.svg)](https://pypi.python.org/pypi/mozloc)
+![Actions Status](https://github.com/scivision/mozilla-location-wifi/workflows/ci/badge.svg))
 [![PyPi Download stats](http://pepy.tech/badge/mozloc)](http://pepy.tech/project/mozloc)
 
 Uses command line access to WiFi information in a short, simple Mozilla Location Services with Wifi from Python.
@@ -17,14 +16,14 @@ Let us know if you're interested.
 
 ## Install
 
-
 Get latest release
 
 ```sh
 pip install mozloc
 ```
 
-or for latest development version
+or for latest development version:
+
 ```sh
 git clone https://github.com/scivision/mozilla-location-wifi/
 pip install -e mozilla-location-wifi/
@@ -79,26 +78,25 @@ Would like to add Bluetooth beacons.
 * [Alternative using Skyhook and geoclue](https://github.com/scivision/python-geoclue)
 * [Raspberry Pi NetworkManager](https://raspberrypi.stackexchange.com/a/73816)
 
-### Windows
-
 To print verbose information about nearby WiFi:
 
-```posh
-netsh wlan show networks mode=bssid
-```
+* Windows: `netsh wlan show networks mode=bssid`
+* MacOS: `airport -s`
+* Linux: `nmcli dev wifi list`
 
 ### Raspberry Pi 3 / 4 / Zero W
 
 Debian comes without NetworkManager by default.
-Be careful as you lose Wifi password etc. by this procedure
+Thus we recommend using Ubuntu or similar on the Raspberry Pi with this program.
+
+If you do use Debian with the procedure below, you lose Wifi password and stored WiFi networks.
 
 1. Install network manager and remove the old
    ```sh
    apt install network-manager
    apt purge dhcpcd5
    ```
-   reboot
-2. upon reboot, try
+2. Reboot and try
    ```sh
    nmcli dev wifi list
    ```

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 https://mozilla.github.io/ichnaea/api/geolocate.html
 https://ichnaea.readthedocs.io/en/latest/api/geolocate.html
@@ -8,7 +7,7 @@ you should get your own Mozilla Location Services API key
 Don't abuse the API or you'll get banned (excessive polling rate)
 """
 
-from .base import log_wifi_loc
+from .base import log_wifi_loc, process_file
 from .modules import get_signal
 
 import pandas
@@ -37,9 +36,13 @@ def mozilla_location():
         help="Mozilla location services URL--don't use this default test key",
         default="https://location.services.mozilla.com/v1/geolocate?key=test",
     )
+    p.add_argument("-i", "--infile", help="use raw text saved from command line")
     p = p.parse_args()
 
-    log_wifi_loc(p.cadence, p.url, p.logfile)
+    if p.infile:
+        process_file(p.infile, mozilla_url=p.url)
+    else:
+        log_wifi_loc(cadence_sec=p.cadence, mozilla_url=p.url, logfile=p.logfile)
 
 
 def csv2kml():

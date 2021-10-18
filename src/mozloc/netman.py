@@ -40,7 +40,7 @@ nmcli radio wifi on"""
     return False
 
 
-def get_signal() -> list[dict[str, T.Any]]:
+def get_signal() -> str:
 
     ret = subprocess.run(NMCMD, timeout=1.0)
     if ret.returncode != 0:
@@ -51,8 +51,13 @@ def get_signal() -> list[dict[str, T.Any]]:
     if ret.returncode != 0:
         logging.error("consider slowing scan cadence.")
 
+    return ret.stdout
+
+
+def parse_signal(raw: str) -> list[dict[str, T.Any]]:
+
     dat = pandas.read_csv(
-        io.StringIO(ret.stdout),
+        io.StringIO(raw),
         sep=r"(?<!\\):",
         index_col=False,
         header=0,
