@@ -1,6 +1,6 @@
 # Mozilla Location Services from Python
 
-![Actions Status](https://github.com/scivision/mozilla-location-wifi/workflows/ci/badge.svg))
+[![ci](https://github.com/scivision/mozilla-location-wifi/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mozilla-location-wifi/actions/workflows/ci.yml)
 [![PyPi Download stats](http://pepy.tech/badge/mozloc)](http://pepy.tech/project/mozloc)
 
 Uses command line access to WiFi information in a short, simple Mozilla Location Services with Wifi from Python.
