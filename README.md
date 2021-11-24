@@ -32,7 +32,7 @@ pip install -e mozilla-location-wifi/
 ## Usage
 
 ```sh
-MozLoc
+python -m mozloc
 ```
 
 Shows `time` `lat` `lng` `accuracy` `N BSSIDs heard`.
@@ -41,7 +41,7 @@ In urban areas, accuracy of less than 100 meters is possible.
 ### dump raw signals
 
 ```sh
-mozloc_signal
+python -m mozloc.signal
 ```
 
 ### Windows
@@ -54,7 +54,7 @@ You may need to disconnect from WiFi (leave WiFi enabled) to make your WiFi chip
 Display logged data in Google Earth or other KML viewer after converting from CSV to KML:
 
 ```sh
-python csv2kml.py in.log out.kml
+python -m mozloc.csv2kml in.log out.kml
 ```
 
 which uses
