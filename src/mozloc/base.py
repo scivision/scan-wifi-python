@@ -1,3 +1,4 @@
+from __future__ import annotations
 from time import sleep
 from pathlib import Path
 import logging
@@ -24,7 +25,7 @@ def process_file(file: Path, mozilla_url: str):
     print(stat)
 
 
-def log_wifi_loc(cadence_sec: float, mozilla_url: str, logfile: Path = None):
+def log_wifi_loc(cadence_sec: float, mozilla_url: str, logfile: Path | None = None):
 
     if logfile:
         logfile = Path(logfile).expanduser()

@@ -7,19 +7,25 @@ import logging
 import subprocess
 import re
 
-EXE = shutil.which("airport", path="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources")
+EXE = shutil.which(
+    "airport",
+    path="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources",
+)
 if not EXE:
     raise ImportError("Could not find Airport")
 
 
 def cli_config_check() -> bool:
     # %% check that Airport is available and WiFi is active
-    ret = subprocess.run([EXE, "--getinfo"], stdout=subprocess.PIPE, text=True, timeout=30)
 
-    if ret.returncode != 0:
+    assert isinstance(EXE, str)
+    try:
+        ret = subprocess.check_output([EXE, "--getinfo"], text=True, timeout=30)
+    except subprocess.CalledProcessError as err:
+        logging.error(err)
         return False
 
-    stdout = ret.stdout.strip().lower()
+    stdout = ret.strip().lower()
     if len(stdout) == "airport: off":
         return False
 
@@ -32,12 +38,13 @@ def cli_config_check() -> bool:
 
 def get_signal() -> str:
 
-    ret = subprocess.run([EXE, "-s"], timeout=30.0, stdout=subprocess.PIPE, text=True)
+    assert isinstance(EXE, str)
+    try:
+        ret = subprocess.check_output([EXE, "-s"], text=True, timeout=30.0)
+    except subprocess.CalledProcessError as err:
+        logging.error(f"consider slowing scan cadence. {err}")
 
-    if ret.returncode != 0:
-        logging.error("consider slowing scan cadence.")
-
-    return ret.stdout
+    return ret
 
 
 def parse_signal(raw: str) -> list[dict[str, T.Any]]:

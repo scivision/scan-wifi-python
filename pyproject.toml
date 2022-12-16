@@ -27,7 +27,8 @@ readme = {file = ["README.md"], content-type = "text/markdown"}
 
 [project.optional-dependencies]
 tests = ["pytest"]
-lint = ["flake8", "flake8-bugbear", "flake8-builtins", "flake8-blind-except", "mypy"]
+lint = ["flake8", "flake8-bugbear", "flake8-builtins", "flake8-blind-except",
+"mypy", "types-requests"]
 
 [tool.black]
 line-length = 100

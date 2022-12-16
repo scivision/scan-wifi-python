@@ -9,23 +9,26 @@ import pandas
 import io
 from time import sleep
 
-NMCLI = shutil.which("nmcli")
-if not NMCLI:
+EXE = shutil.which("nmcli")
+if not EXE:
     raise ImportError('Could not find NetworkManager "nmcli"')
 
-NMCMD = [NMCLI, "-g", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]  # Debian stretch, Ubuntu 18.04
-NMLEG = [NMCLI, "-t", "-f", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]  # ubuntu 16.04
-NMSCAN = [NMCLI, "device", "wifi", "rescan"]
+NMCMD = [EXE, "-g", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]  # Debian stretch, Ubuntu 18.04
+NMLEG = [EXE, "-t", "-f", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]  # ubuntu 16.04
+NMSCAN = [EXE, "device", "wifi", "rescan"]
 
 
 def cli_config_check() -> bool:
     # %% check that NetworkManager CLI is available and WiFi is active
-    ret = subprocess.run([NMCLI, "-t", "radio", "wifi"], stdout=subprocess.PIPE, text=True, timeout=2)
 
-    if ret.returncode != 0:
+    assert isinstance(EXE, str)
+    try:
+        ret = subprocess.check_output([EXE, "-t", "radio", "wifi"], text=True, timeout=2)
+    except subprocess.CalledProcessError as err:
+        logging.error(err)
         return False
 
-    stdout = ret.stdout.strip().split(":")
+    stdout = ret.strip().split(":")
     if "enabled" in stdout:
         return True
 
@@ -42,16 +45,19 @@ nmcli radio wifi on"""
 
 def get_signal() -> str:
 
-    ret = subprocess.run(NMCMD, timeout=1.0)
-    if ret.returncode != 0:
-        raise ConnectionError("could not connect with NetworkManager for WiFi")
+    try:
+        subprocess.check_call(NMCMD, timeout=1.0)
+    except subprocess.CalledProcessError as err:
+        raise ConnectionError(f"could not connect with NetworkManager for WiFi   {err}")
+
     sleep(0.5)  # nmcli errored for less than about 0.2 sec.
     # takes several seconds to update, so do it now.
-    ret = subprocess.run(NMSCAN, timeout=1.0, stdout=subprocess.PIPE, text=True)
-    if ret.returncode != 0:
-        logging.error("consider slowing scan cadence.")
+    try:
+        ret = subprocess.check_output(NMSCAN, timeout=1.0, text=True)
+    except subprocess.CalledProcessError as err:
+        logging.error(f"consider slowing scan cadence. {err}")
 
-    return ret.stdout
+    return ret
 
 
 def parse_signal(raw: str) -> list[dict[str, T.Any]]:

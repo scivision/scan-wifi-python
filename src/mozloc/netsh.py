@@ -7,20 +7,28 @@ import logging
 import io
 import shutil
 
-CLI = shutil.which("netsh")
-if not CLI:
+EXE = shutil.which("netsh")
+if not EXE:
     raise ImportError('Could not find NetSH "netsh"')
 
-CMD = [CLI, "wlan", "show", "networks", "mode=bssid"]
+CMD = [EXE, "wlan", "show", "networks", "mode=bssid"]
 
 
 def cli_config_check() -> bool:
-    # %% check that NetSH CLI is available and WiFi is active
-    ret = subprocess.run(CMD, stdout=subprocess.PIPE, text=True, timeout=2)
-    for line in ret.stdout.split("\n"):
+    # %% check that NetSH EXE is available and WiFi is active
+    try:
+        ret = subprocess.check_output(CMD, text=True, timeout=2)
+    except subprocess.CalledProcessError as err:
+        logging.error(err)
+        return False
+
+    for line in ret.split("\n"):
         if "networks currently visible" in line:
             return True
-        if "The wireless local area network interface is powered down and doesn't support the requested operation" in line:
+        if (
+            "The wireless local area network interface is powered down and doesn't support the requested operation"
+            in line
+        ):
             logging.error("must enable WiFi, it appears to be turned off.")
             return False
 
@@ -30,15 +38,17 @@ def cli_config_check() -> bool:
 
 def get_signal() -> str:
     """
-    get signal strength using CLI
+    get signal strength using EXE
 
-    returns dict of data parsed from CLI
+    returns dict of data parsed from EXE
     """
-    ret = subprocess.run(CMD, timeout=1.0, stdout=subprocess.PIPE, text=True)
-    if ret.returncode != 0:
-        logging.error("consider slowing scan cadence.")
 
-    return ret.stdout
+    try:
+        ret = subprocess.check_output(CMD, timeout=1.0, text=True)
+    except subprocess.CalledProcessError as err:
+        logging.error(f"consider slowing scan cadence.  {err}")
+
+    return ret
 
 
 def parse_signal(raw: str) -> list[dict[str, T.Any]]:
