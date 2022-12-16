@@ -1,8 +1,40 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mozloc"
+version = "1.4.0"
+description = "Using Mozilla Location services, log location vs. time using WiFi or convert to KML."
+keywords = ["wifi", "geolocation"]
+classifiers = ["Development Status :: 5 - Production/Stable",
+ "Environment :: Console",
+ "Intended Audience :: Information Technology",
+ "Intended Audience :: System Administrators",
+ "Operating System :: POSIX :: Linux",
+ "Operating System :: MacOS",
+ "Operating System :: Microsoft :: Windows",
+ "Programming Language :: Python :: 3",
+ "Topic :: System :: Networking",
+ "Topic :: Utilities"
+]
+requires-python = ">=3.7"
+dynamic = ["readme"]
+dependencies = ["requests", "pandas"]
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.md"], content-type = "text/markdown"}
+
+[project.optional-dependencies]
+tests = ["pytest"]
+lint = ["flake8", "flake8-bugbear", "flake8-builtins", "flake8-blind-except", "mypy"]
 
 [tool.black]
-line-length = 132
+line-length = 100
 
-[tool.pytest.ini_options]
-addopts = "-ra -v"
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+files = ["src"]
+ignore_missing_imports = true
