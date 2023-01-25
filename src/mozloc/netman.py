@@ -4,26 +4,18 @@ from __future__ import annotations
 import typing as T
 import subprocess
 import logging
-import shutil
 import pandas
 import io
 from time import sleep
 
-EXE = shutil.which("nmcli")
-if not EXE:
-    raise ImportError('Could not find NetworkManager "nmcli"')
-
-NMCMD = [EXE, "-g", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]  # Debian stretch, Ubuntu 18.04
-NMLEG = [EXE, "-t", "-f", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]  # ubuntu 16.04
-NMSCAN = [EXE, "device", "wifi", "rescan"]
+from .cmd import get_nmcli
 
 
 def cli_config_check() -> bool:
     # %% check that NetworkManager CLI is available and WiFi is active
 
-    assert isinstance(EXE, str)
     try:
-        ret = subprocess.check_output([EXE, "-t", "radio", "wifi"], text=True, timeout=2)
+        ret = subprocess.check_output([get_nmcli(), "-t", "radio", "wifi"], text=True, timeout=2)
     except subprocess.CalledProcessError as err:
         logging.error(err)
         return False
@@ -45,15 +37,23 @@ nmcli radio wifi on"""
 
 def get_signal() -> str:
 
+    cmd = [get_nmcli(), "-g", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]
+    # Debian stretch, Ubuntu 18.04
+    # cmd = [EXE, "-t", "-f", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]
+    # ubuntu 16.04
+
     try:
-        subprocess.check_call(NMCMD, timeout=1.0)
+        subprocess.check_call(cmd, timeout=1.0)
     except subprocess.CalledProcessError as err:
         raise ConnectionError(f"could not connect with NetworkManager for WiFi   {err}")
 
     sleep(0.5)  # nmcli errored for less than about 0.2 sec.
     # takes several seconds to update, so do it now.
+
+    scan = [get_nmcli(), "device", "wifi", "rescan"]
+
     try:
-        ret = subprocess.check_output(NMSCAN, timeout=1.0, text=True)
+        ret = subprocess.check_output(scan, timeout=1.0, text=True)
     except subprocess.CalledProcessError as err:
         logging.error(f"consider slowing scan cadence. {err}")
 

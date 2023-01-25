@@ -5,19 +5,16 @@ import typing as T
 import subprocess
 import logging
 import io
-import shutil
 
-EXE = shutil.which("netsh")
-if not EXE:
-    raise ImportError('Could not find NetSH "netsh"')
-
-CMD = [EXE, "wlan", "show", "networks", "mode=bssid"]
+from .cmd import get_netsh
 
 
 def cli_config_check() -> bool:
     # %% check that NetSH EXE is available and WiFi is active
+    cmd = [get_netsh(), "wlan", "show", "networks", "mode=bssid"]
+
     try:
-        ret = subprocess.check_output(CMD, text=True, timeout=2)
+        ret = subprocess.check_output(cmd, text=True, timeout=2)
     except subprocess.CalledProcessError as err:
         logging.error(err)
         return False
@@ -43,8 +40,9 @@ def get_signal() -> str:
     returns dict of data parsed from EXE
     """
 
+    cmd = [get_netsh(), "wlan", "show", "networks", "mode=bssid"]
     try:
-        ret = subprocess.check_output(CMD, timeout=1.0, text=True)
+        ret = subprocess.check_output(cmd, timeout=1.0, text=True)
     except subprocess.CalledProcessError as err:
         logging.error(f"consider slowing scan cadence.  {err}")
 

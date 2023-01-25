@@ -2,25 +2,18 @@
 
 from __future__ import annotations
 import typing as T
-import shutil
 import logging
 import subprocess
 import re
 
-EXE = shutil.which(
-    "airport",
-    path="/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources",
-)
-if not EXE:
-    raise ImportError("Could not find Airport")
+from .cmd import get_airport
 
 
 def cli_config_check() -> bool:
     # %% check that Airport is available and WiFi is active
 
-    assert isinstance(EXE, str)
     try:
-        ret = subprocess.check_output([EXE, "--getinfo"], text=True, timeout=30)
+        ret = subprocess.check_output([get_airport(), "--getinfo"], text=True, timeout=30)
     except subprocess.CalledProcessError as err:
         logging.error(err)
         return False
@@ -38,9 +31,8 @@ def cli_config_check() -> bool:
 
 def get_signal() -> str:
 
-    assert isinstance(EXE, str)
     try:
-        ret = subprocess.check_output([EXE, "-s"], text=True, timeout=30.0)
+        ret = subprocess.check_output([get_airport(), "-s"], text=True, timeout=30.0)
     except subprocess.CalledProcessError as err:
         logging.error(f"consider slowing scan cadence. {err}")
 

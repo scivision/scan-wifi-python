@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mozloc"
-version = "1.4.0"
+version = "1.5.0"
 description = "Using Mozilla Location services, log location vs. time using WiFi or convert to KML."
 keywords = ["wifi", "geolocation"]
 classifiers = ["Development Status :: 5 - Production/Stable",
@@ -18,7 +18,7 @@ classifiers = ["Development Status :: 5 - Production/Stable",
  "Topic :: System :: Networking",
  "Topic :: Utilities"
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 dynamic = ["readme"]
 dependencies = ["requests", "pandas"]
 
