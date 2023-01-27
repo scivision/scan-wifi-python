@@ -45,6 +45,14 @@ dump raw signals, without using API:
 python -m mozloc.signal
 ```
 
+### macOS
+
+On macOS, much more accurate results come by running as root by using sudo.
+This is because "airport" only emits BSSID if running with sudo.
+
+Possible future implementation could use
+[CoreWLAN](https://developer.apple.com/documentation/corewlan/).
+
 ### Windows
 
 On Windows, NetSH is used.

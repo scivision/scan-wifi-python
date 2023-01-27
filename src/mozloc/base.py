@@ -46,7 +46,6 @@ def log_wifi_loc(cadence_sec: float, mozilla_url: str, logfile: Path | None = No
             logging.warning(f"cannot locate since at least 2 BSSIDs required\n{dat}")
             sleep(cadence_sec)
             continue
-        print(dat)
 
         loc = get_loc_mozilla(dat, mozilla_url)
         if loc is None:

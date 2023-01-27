@@ -32,7 +32,7 @@ def cli_config_check() -> bool:
 def get_signal() -> str:
 
     try:
-        ret = subprocess.check_output([get_airport(), "-s"], text=True, timeout=30)
+        ret = subprocess.check_output([get_airport(), "--scan"], text=True, timeout=30)
     except subprocess.CalledProcessError as err:
         logging.error(f"consider slowing scan cadence. {err}")
 
@@ -42,17 +42,15 @@ def get_signal() -> str:
 def parse_signal(raw: str) -> list[dict[str, T.Any]]:
 
     isroot = running_as_root()
-    if not isroot:
-        raise RuntimeError("airport requires running as sudo to get BSSID")
 
     psudo = r"\s*([0-9a-zA-Z\s\-\.]+)\s+([0-9a-f]{2}(?::[0-9a-f]{2}){5})\s+(-\d{2,3})"
     # BSSID only present if sudo
-    # puser = r"\s*([0-9a-zA-Z\s\-\.]+)\s+(-\d{2,3})"
+    puser = r"\s*([0-9a-zA-Z\s\-\.]+)\s+(-\d{2,3})"
     # non-sudo has no BSSID
 
-    p = psudo
-    i = 2
-
+    p = psudo if isroot else puser
+    isig = 3 if isroot else 2
+    ibssid = 2
     pat = re.compile(p)
     dat: list[dict[str, str]] = []
 
@@ -60,12 +58,13 @@ def parse_signal(raw: str) -> list[dict[str, T.Any]]:
         mat = pat.match(line)
         if mat:
             # Hidden SSID optout implicitly excluded by regex
-            ssid = mat.group(1)
+            ssid = mat.group(1).strip()
             # optout
             if ssid.endswith("_nomap"):
                 continue
-            dat.append(
-                {"ssid": ssid, "macAddress": mat.group(i), "signalStrength": mat.group(i + 1)}
-            )
+            d = {"ssid": ssid, "signalStrength": mat.group(isig)}
+            if isroot:
+                d["macAddress"] = mat.group(ibssid)
+            dat.append(d)
 
     return dat
