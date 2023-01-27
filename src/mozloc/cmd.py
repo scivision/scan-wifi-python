@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+import os
 import functools
 import shutil
+
+
+def running_as_root() -> bool:
+    return os.getuid() == 0
 
 
 @functools.cache

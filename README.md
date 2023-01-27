@@ -3,7 +3,9 @@
 [![ci](https://github.com/scivision/mozilla-location-wifi/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mozilla-location-wifi/actions/workflows/ci.yml)
 [![PyPi Download stats](http://pepy.tech/badge/mozloc)](http://pepy.tech/project/mozloc)
 
-Uses command line access to WiFi information in a short, simple Mozilla Location Services with Wifi from Python.
+Uses command line access to WiFi information via
+[Mozilla Location Services API](https://ichnaea.readthedocs.io/en/latest/api/geolocate.html?highlight=macaddress#wifi-access-point-fields)
+from Python.
 The command line programs used to access WiFi information include:
 
 * Linux: `nmcli` [NetworkManager](https://developer.gnome.org/NetworkManager/stable/nmcli.html)
@@ -12,7 +14,6 @@ The command line programs used to access WiFi information include:
 
 Note that a similar service with better accuracy is available from
 [Google](https://developers.google.com/maps/documentation/geolocation/intro).
-Let us know if you're interested.
 
 ## Install
 
@@ -38,7 +39,7 @@ python -m mozloc
 Shows `time` `lat` `lng` `accuracy` `N BSSIDs heard`.
 In urban areas, accuracy of less than 100 meters is possible.
 
-### dump raw signals
+dump raw signals, without using API:
 
 ```sh
 python -m mozloc.signal
@@ -49,7 +50,7 @@ python -m mozloc.signal
 On Windows, NetSH is used.
 You may need to disconnect from WiFi (leave WiFi enabled) to make your WiFi chipset scan and be able to get location.
 
-### convert to KML
+## convert to KML
 
 Display logged data in Google Earth or other KML viewer after converting from CSV to KML:
 
