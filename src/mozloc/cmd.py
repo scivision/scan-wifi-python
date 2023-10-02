@@ -12,7 +12,7 @@ def running_as_root() -> bool:
 @functools.cache
 def get_exe(name: str, path: str | None = None) -> str:
     if not (exe := shutil.which(name, path=path)):
-        raise ImportError(f"{name} not found")
+        raise FileNotFoundError(name)
     return exe
 
 
