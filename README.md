@@ -8,9 +8,9 @@ Uses command line access to WiFi information via
 from Python.
 The command line programs used to access WiFi information include:
 
-* Linux: `nmcli` [NetworkManager](https://developer.gnome.org/NetworkManager/stable/nmcli.html)
-* MacOS: `airport` built into MacOS
-* Windows: [`netsh`](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc755301(v=ws.10)?redirectedfrom=MSDN)
+* Linux: [nmcli](https://developer.gnome.org/NetworkManager/stable/nmcli.html) NetworkManager
+* MacOS: [airport](https://ss64.com/osx/airport.html) built into MacOS
+* Windows: [netsh](https://learn.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh)
 
 Note that a similar service with better accuracy is available from
 [Google](https://developers.google.com/maps/documentation/geolocation/intro).
@@ -27,7 +27,7 @@ or for latest development version:
 
 ```sh
 git clone https://github.com/scivision/mozilla-location-wifi/
-pip install -e mozilla-location-wifi/
+pip install -e ./mozilla-location-wifi
 ```
 
 ## Usage
@@ -92,22 +92,3 @@ To print verbose information about nearby WiFi:
 * Windows: `netsh wlan show networks mode=bssid`
 * MacOS: `airport -s`
 * Linux: `nmcli dev wifi list`
-
-### Raspberry Pi 3 / 4 / Zero W
-
-Debian comes without NetworkManager by default.
-Thus we recommend using Ubuntu or similar on the Raspberry Pi with this program.
-
-If you do use Debian with the procedure below, you lose Wifi password and stored WiFi networks.
-
-1. Install network manager and remove the old
-   ```sh
-   apt install network-manager
-   apt purge dhcpcd5
-   ```
-2. Reboot and try
-   ```sh
-   nmcli dev wifi list
-   ```
-   you should see several wifi access points and signal.
-3. try the MLS geolocation program above.
