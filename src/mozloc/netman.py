@@ -36,7 +36,6 @@ nmcli radio wifi on"""
 
 
 def get_signal() -> str:
-
     cmd = [get_nmcli(), "-g", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]
     # Debian stretch, Ubuntu 18.04
     # cmd = [EXE, "-t", "-f", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]
@@ -61,7 +60,6 @@ def get_signal() -> str:
 
 
 def parse_signal(raw: str) -> list[dict[str, T.Any]]:
-
     dat = pandas.read_csv(
         io.StringIO(raw),
         sep=r"(?<!\\):",

@@ -30,7 +30,6 @@ def cli_config_check() -> bool:
 
 
 def get_signal() -> str:
-
     try:
         ret = subprocess.check_output([get_airport(), "--scan"], text=True, timeout=30)
     except subprocess.CalledProcessError as err:
@@ -40,7 +39,6 @@ def get_signal() -> str:
 
 
 def parse_signal(raw: str) -> list[dict[str, T.Any]]:
-
     isroot = running_as_root()
 
     psudo = r"\s*([0-9a-zA-Z\s\-\.]+)\s+([0-9a-f]{2}(?::[0-9a-f]{2}){5})\s+(-\d{2,3})"

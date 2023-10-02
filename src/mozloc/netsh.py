@@ -50,7 +50,6 @@ def get_signal() -> str:
 
 
 def parse_signal(raw: str) -> list[dict[str, T.Any]]:
-
     dat: list[dict[str, str]] = []
     out = io.StringIO(raw)
 

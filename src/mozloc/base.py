@@ -26,7 +26,6 @@ def process_file(file: Path, mozilla_url: str):
 
 
 def log_wifi_loc(cadence_sec: float, mozilla_url: str, logfile: Path | None = None):
-
     if logfile:
         logfile = Path(logfile).expanduser()
         with logfile.open("a") as f:

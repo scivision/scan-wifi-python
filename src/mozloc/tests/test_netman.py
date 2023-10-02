@@ -6,7 +6,6 @@ is_ci = os.environ.get("CI", "").lower() == "true"
 
 @pytest.mark.skipif(is_ci, reason="CI doesn't usually have WiFi")
 def test_nm_loc():
-
     mozloc = pytest.importorskip("mozloc")
     loc = mozloc.parse_signal(mozloc.get_signal())
 
@@ -17,6 +16,5 @@ def test_nm_loc():
 
 @pytest.mark.skipif(is_ci, reason="CI doesn't usually have WiFi")
 def test_nm_connection():
-
     mozloc = pytest.importorskip("mozloc")
     assert mozloc.cli_config_check()
