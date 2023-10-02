@@ -7,12 +7,13 @@ from datetime import datetime
 
 
 def get_loc_mozilla(dat: T.Sequence[T.Any], url: str):
-    if isinstance(dat, pandas.DataFrame):
-        json_to = dat.to_json(orient="records")
-    elif isinstance(dat, list):
-        json_to = json.dumps(dat)
-    else:
-        raise TypeError("Unknown data format")
+    match dat:
+        case pandas.DataFrame():
+            json_to = dat.to_json(orient="records")
+        case list():
+            json_to = json.dumps(dat)
+        case _:
+            raise TypeError("Unknown data format")
 
     json_to = '{ "wifiAccessPoints":' + json_to + "}"
     try:
