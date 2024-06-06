@@ -47,6 +47,11 @@ python -m mozloc.signal
 
 ### macOS
 
+Note: macOS 14.4+ no longer works as "airport" has been removed.
+If someone has time to implement, perhaps starting with example
+[CoreLocation](./macos_corelocation.py)
+code, we would welcome a PR.
+
 On macOS, much more accurate results come by running as root by using sudo.
 This is because "airport" only emits BSSID if running with sudo.
 

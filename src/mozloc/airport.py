@@ -1,4 +1,7 @@
-""" MacOS airport functions """
+""" MacOS airport functions
+
+Airport was removed from macOS 14.4+, so these functions no longer are relevant.
+"""
 
 from __future__ import annotations
 import typing as T
