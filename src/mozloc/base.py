@@ -1,4 +1,3 @@
-from __future__ import annotations
 from time import sleep
 from pathlib import Path
 import logging

@@ -1,5 +1,6 @@
 import pytest
 import os
+import pandas
 
 is_ci = os.environ.get("CI", "").lower() == "true"
 
@@ -9,9 +10,8 @@ def test_nm_loc():
     mozloc = pytest.importorskip("mozloc")
     loc = mozloc.parse_signal(mozloc.get_signal())
 
-    assert isinstance(loc, list)
-    assert isinstance(loc[0], dict)
-    assert -130 < int(loc[0]["signalStrength"]) < 0, "impossible RSSI"
+    assert isinstance(loc, pandas.DataFrame)
+    assert -130 < int(loc["signalStrength"][0]) < 0, "impossible RSSI"
 
 
 @pytest.mark.skipif(is_ci, reason="CI doesn't usually have WiFi")

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import os
 import functools
 import shutil
@@ -28,11 +26,3 @@ def get_airport() -> str:
         raise EnvironmentError(msg)
 
     return exe
-
-
-def get_nmcli() -> str:
-    return get_exe("nmcli")
-
-
-def get_netsh() -> str:
-    return get_exe("netsh")

@@ -1,21 +1,21 @@
 """ Network Manager CLI (nmcli) functions """
 
-from __future__ import annotations
-import typing as T
 import subprocess
 import logging
-import pandas
 import io
 from time import sleep
 
-from .cmd import get_nmcli
+import pandas
+
+from .exe import get_exe
 
 
 def cli_config_check() -> bool:
     # %% check that NetworkManager CLI is available and WiFi is active
+    exe = get_exe("nmcli")
 
     try:
-        ret = subprocess.check_output([get_nmcli(), "-t", "radio", "wifi"], text=True, timeout=2)
+        ret = subprocess.check_output([exe, "-t", "radio", "wifi"], text=True, timeout=2)
     except subprocess.CalledProcessError as err:
         logging.error(err)
         return False
@@ -36,7 +36,9 @@ nmcli radio wifi on"""
 
 
 def get_signal() -> str:
-    cmd = [get_nmcli(), "-g", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]
+    exe = get_exe("nmcli")
+
+    cmd = [exe, "-g", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]
     # Debian stretch, Ubuntu 18.04
     # cmd = [EXE, "-t", "-f", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]
     # ubuntu 16.04
@@ -49,7 +51,7 @@ def get_signal() -> str:
     sleep(0.5)  # nmcli errored for less than about 0.2 sec.
     # takes several seconds to update, so do it now.
 
-    scan = [get_nmcli(), "device", "wifi", "rescan"]
+    scan = [exe, "device", "wifi", "rescan"]
 
     try:
         ret = subprocess.check_output(scan, timeout=1.0, text=True)
@@ -59,7 +61,7 @@ def get_signal() -> str:
     return ret
 
 
-def parse_signal(raw: str) -> list[dict[str, T.Any]]:
+def parse_signal(raw: str) -> pandas.DataFrame:
     dat = pandas.read_csv(
         io.StringIO(raw),
         sep=r"(?<!\\):",

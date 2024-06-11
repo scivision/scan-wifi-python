@@ -3,13 +3,13 @@
 Airport was removed from macOS 14.4+, so these functions no longer are relevant.
 """
 
-from __future__ import annotations
-import typing as T
 import logging
 import subprocess
 import re
 
-from .cmd import get_airport, running_as_root
+import pandas
+
+from .exe import get_airport, running_as_root
 
 
 def cli_config_check() -> bool:
@@ -41,7 +41,7 @@ def get_signal() -> str:
     return ret
 
 
-def parse_signal(raw: str) -> list[dict[str, T.Any]]:
+def parse_signal(raw: str) -> pandas.DataFrame:
     isroot = running_as_root()
 
     psudo = r"\s*([0-9a-zA-Z\s\-\.]+)\s+([0-9a-f]{2}(?::[0-9a-f]{2}){5})\s+(-\d{2,3})"
@@ -68,4 +68,4 @@ def parse_signal(raw: str) -> list[dict[str, T.Any]]:
                 d["macAddress"] = mat.group(ibssid)
             dat.append(d)
 
-    return dat
+    return pandas.DataFrame(dat)

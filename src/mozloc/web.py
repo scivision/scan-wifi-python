@@ -1,19 +1,13 @@
-import requests
 import logging
-import pandas
-import json
-import typing as T
 from datetime import datetime
 
+import requests
+import pandas
 
-def get_loc_mozilla(dat: T.Sequence[T.Any], url: str):
-    match dat:
-        case pandas.DataFrame():
-            json_to = dat.to_json(orient="records")
-        case list():
-            json_to = json.dumps(dat)
-        case _:
-            raise TypeError("Unknown data format")
+
+def get_loc_mozilla(dat: pandas.DataFrame, url: str):
+
+    json_to = dat.to_json(orient="records")
 
     json_to = '{ "wifiAccessPoints":' + json_to + "}"
     try:

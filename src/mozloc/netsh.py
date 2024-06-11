@@ -1,17 +1,19 @@
 """ Windows NetSH functions """
 
-from __future__ import annotations
-import typing as T
 import subprocess
 import logging
 import io
 
-from .cmd import get_netsh
+import pandas
+
+from .exe import get_exe
 
 
 def cli_config_check() -> bool:
     # %% check that NetSH EXE is available and WiFi is active
-    cmd = [get_netsh(), "wlan", "show", "networks", "mode=bssid"]
+    exe = get_exe("netsh")
+
+    cmd = [exe, "wlan", "show", "networks", "mode=bssid"]
 
     try:
         ret = subprocess.check_output(cmd, text=True, timeout=2)
@@ -39,8 +41,9 @@ def get_signal() -> str:
 
     returns dict of data parsed from EXE
     """
+    exe = get_exe("netsh")
 
-    cmd = [get_netsh(), "wlan", "show", "networks", "mode=bssid"]
+    cmd = [exe, "wlan", "show", "networks", "mode=bssid"]
     try:
         ret = subprocess.check_output(cmd, timeout=1.0, text=True)
     except subprocess.CalledProcessError as err:
@@ -49,7 +52,7 @@ def get_signal() -> str:
     return ret
 
 
-def parse_signal(raw: str) -> list[dict[str, T.Any]]:
+def parse_signal(raw: str) -> pandas.DataFrame:
     dat: list[dict[str, str]] = []
     out = io.StringIO(raw)
 
@@ -83,7 +86,7 @@ def parse_signal(raw: str) -> list[dict[str, T.Any]]:
                 break
             break
 
-    return dat
+    return pandas.DataFrame(dat)
 
 
 def signal_percent_to_dbm(percent: int) -> int:
