@@ -42,7 +42,7 @@ In urban areas, accuracy of less than 100 meters is possible.
 dump raw signals, without using API:
 
 ```sh
-python -m mozloc.signal
+python -m mozloc --dump
 ```
 
 ### macOS

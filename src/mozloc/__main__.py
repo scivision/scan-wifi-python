@@ -8,8 +8,10 @@ Don't abuse the API or you'll get banned (excessive polling rate)
 """
 
 import argparse
+from pprint import pprint
 
 from .base import log_wifi_loc, process_file
+from .modules import parse_signal, get_signal
 
 
 p = argparse.ArgumentParser()
@@ -26,10 +28,13 @@ p.add_argument(
     help="Mozilla location services URL--don't use this default test key",
     default="https://location.services.mozilla.com/v1/geolocate?key=test",
 )
+p.add_argument("-d", "--dump", help="print raw data to console without logging", action="store_true")
 p.add_argument("-i", "--infile", help="use raw text saved from command line")
 args = p.parse_args()
 
-if args.infile:
+if args.dump:
+    pprint(parse_signal(get_signal()))
+elif args.infile:
     process_file(args.infile, mozilla_url=args.url)
 else:
     log_wifi_loc(cadence_sec=args.cadence, mozilla_url=args.url, logfile=args.logfile)
