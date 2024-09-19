@@ -28,7 +28,9 @@ p.add_argument(
     help="Mozilla location services URL--don't use this default test key",
     default="https://location.services.mozilla.com/v1/geolocate?key=test",
 )
-p.add_argument("-d", "--dump", help="print raw data to console without logging", action="store_true")
+p.add_argument(
+    "-d", "--dump", help="print raw data to console without logging", action="store_true"
+)
 p.add_argument("-i", "--infile", help="use raw text saved from command line")
 args = p.parse_args()
 
