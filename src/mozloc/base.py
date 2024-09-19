@@ -10,7 +10,7 @@ from .web import get_loc_mozilla
 HEADER = "time                lat        lon         accuracy NumBSSIDs"
 
 
-def process_file(file: Path, mozilla_url: str):
+def process_file(file: Path, url: str | None = None):
     """
     process raw data captured from NetSH etc. by user previously to a file
     """
@@ -18,14 +18,16 @@ def process_file(file: Path, mozilla_url: str):
     raw = Path(file).expanduser().read_text()
     dat = get_signal(raw)
     pprint(dat)
-    loc = get_loc_mozilla(dat, url=mozilla_url)
 
-    stat = f'{loc["t"].isoformat(timespec="seconds")} {loc["lat"]} {loc["lng"]} {loc["accuracy"]:.1f} {loc["N"]:02d}'
+    if url:
+        loc = get_loc_mozilla(dat, url)
 
-    print(stat)
+        stat = f'{loc["t"].isoformat(timespec="seconds")} {loc["lat"]} {loc["lng"]} {loc["accuracy"]:.1f} {loc["N"]:02d}'
+
+        print(stat)
 
 
-def log_wifi_loc(cadence_sec: float, mozilla_url: str, logfile: Path | None = None):
+def log_wifi_loc(cadence_sec: float, url: str | None = None, logfile: Path | None = None):
     if logfile:
         logfile = Path(logfile).expanduser()
         with logfile.open("a") as f:
@@ -46,18 +48,21 @@ def log_wifi_loc(cadence_sec: float, mozilla_url: str, logfile: Path | None = No
             sleep(cadence_sec)
             continue
 
-        loc = get_loc_mozilla(dat, mozilla_url)
+        if url:
+            loc = get_loc_mozilla(dat, url)
 
-        if loc is None:
-            logging.warning(f"Did not get location from {len(dat)} BSSIDs")
-            sleep(cadence_sec)
-            continue
+            if loc is None:
+                logging.warning(f"Did not get location from {len(dat)} BSSIDs")
+                sleep(cadence_sec)
+                continue
 
-        stat = f'{loc["t"].isoformat(timespec="seconds")} {loc["lat"]} {loc["lng"]} {loc["accuracy"]:.1f} {loc["N"]:02d}'
-        print(stat)
+            stat = f'{loc["t"].isoformat(timespec="seconds")} {loc["lat"]} {loc["lng"]} {loc["accuracy"]:.1f} {loc["N"]:02d}'
+            print(stat)
 
-        if logfile:
-            with logfile.open("a") as f:
-                f.write(stat + "\n")
+            if logfile:
+                with logfile.open("a") as f:
+                    f.write(stat + "\n")
+        else:
+            print(dat)
 
         sleep(cadence_sec)

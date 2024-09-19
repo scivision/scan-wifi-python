@@ -23,11 +23,7 @@ p.add_argument(
     default=60,
     type=float,
 )
-p.add_argument(
-    "-url",
-    help="Mozilla location services URL--don't use this default test key",
-    default="https://location.services.mozilla.com/v1/geolocate?key=test",
-)
+p.add_argument("-url", help="Location service URL")
 p.add_argument(
     "-d", "--dump", help="print raw data to console without logging", action="store_true"
 )
@@ -37,6 +33,6 @@ args = p.parse_args()
 if args.dump:
     pprint(get_signal(scan_signal()))
 elif args.infile:
-    process_file(args.infile, mozilla_url=args.url)
+    process_file(args.infile, url=args.url)
 else:
-    log_wifi_loc(cadence_sec=args.cadence, mozilla_url=args.url, logfile=args.logfile)
+    log_wifi_loc(cadence_sec=args.cadence, url=args.url, logfile=args.logfile)
