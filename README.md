@@ -1,7 +1,18 @@
-# Mozilla Location Services from Python
+# RETIRED: Mozilla Location Services from Python
 
 [![ci](https://github.com/scivision/mozilla-location-wifi/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mozilla-location-wifi/actions/workflows/ci.yml)
-[![PyPi Download stats](http://pepy.tech/badge/mozloc)](http://pepy.tech/project/mozloc)
+[![PyPI Download stats](http://pepy.tech/badge/mozloc)](http://pepy.tech/project/mozloc)
+
+This project is RETIRED due to
+[discontinuation of Mozilla Location Services](https://discourse.mozilla.org/t/retiring-the-mozilla-location-service/128693).
+It worked so well, sorry to see it go!
+
+This project can nonetheless be used as a reference for accessing WiFi information from Python.
+
+A future direction might be to use
+[Google Geolocation API](https://developers.google.com/maps/documentation/geolocation/intro)
+
+---
 
 Uses command line access to WiFi information via
 [Mozilla Location Services API](https://ichnaea.readthedocs.io/en/latest/api/geolocate.html?highlight=macaddress#wifi-access-point-fields)
@@ -9,11 +20,8 @@ from Python.
 The command line programs used to access WiFi information include:
 
 * Linux: [nmcli](https://developer.gnome.org/NetworkManager/stable/nmcli.html) NetworkManager
-* MacOS: [airport](https://ss64.com/osx/airport.html) built into MacOS
+* MacOS: [CoreLocation.CWWiFiClient](https://developer.apple.com/documentation/corewlan/cwwificlient) or for macOS < 14.4 [airport](https://ss64.com/osx/airport.html)
 * Windows: [netsh](https://learn.microsoft.com/en-us/windows-server/networking/technologies/netsh/netsh)
-
-Note that a similar service with better accuracy is available from
-[Google](https://developers.google.com/maps/documentation/geolocation/intro).
 
 ## Install
 
@@ -47,16 +55,7 @@ python -m mozloc --dump
 
 ### macOS
 
-Note: macOS 14.4+ no longer works as "airport" has been removed.
-If someone has time to implement, perhaps starting with example
-[CoreLocation](./macos_corelocation.py)
-code, we would welcome a PR.
-
-On macOS, much more accurate results come by running as root by using sudo.
-This is because "airport" only emits BSSID if running with sudo.
-
-Possible future implementation could use
-[CoreWLAN](https://developer.apple.com/documentation/corewlan/).
+macOS &ge; 14.4 uses CoreLocation.CWWiFiClient as "airport" was removed.
 
 ### Windows
 
@@ -84,7 +83,7 @@ E.g.
 
 ## TODO
 
-Would like to add Bluetooth beacons.
+Would like to add Bluetooth beacons. Need to use a new location service.
 
 ## Notes
 

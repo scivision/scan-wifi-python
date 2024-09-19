@@ -47,6 +47,7 @@ def log_wifi_loc(cadence_sec: float, mozilla_url: str, logfile: Path | None = No
             continue
 
         loc = get_loc_mozilla(dat, mozilla_url)
+
         if loc is None:
             logging.warning(f"Did not get location from {len(dat)} BSSIDs")
             sleep(cadence_sec)
