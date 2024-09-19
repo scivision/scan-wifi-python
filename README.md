@@ -1,22 +1,25 @@
-# RETIRED: Mozilla Location Services from Python
+# Scan WiFi from Python
 
 [![ci](https://github.com/scivision/mozilla-location-wifi/actions/workflows/ci.yml/badge.svg)](https://github.com/scivision/mozilla-location-wifi/actions/workflows/ci.yml)
 [![PyPI Download stats](http://pepy.tech/badge/mozloc)](http://pepy.tech/project/mozloc)
 
-This project is RETIRED due to
-[discontinuation of Mozilla Location Services](https://discourse.mozilla.org/t/retiring-the-mozilla-location-service/128693).
-It worked so well, sorry to see it go!
+This project shows how to scan WiFi from Python using command line tools or pyobjc (macOS).
 
-This project can nonetheless be used as a reference for accessing WiFi information from Python.
+[Scapy dot11](https://scapy.readthedocs.io/en/latest/api/scapy.layers.dot11.html) is an alternative, more robust cross-platform way to scan WiFi than demonstrated here.
+
+[Discontinuation](https://discourse.mozilla.org/t/retiring-the-mozilla-location-service/128693) 
+of 
+[Mozilla Location Services API](https://ichnaea.readthedocs.io/en/latest/api/geolocate.html?highlight=macaddress#wifi-access-point-fields).
+is sad as it worked so well!
+
+This project can be used as a reference for simply accessing WiFi information from Python without using Scapy.
 
 A future direction might be to use
 [Google Geolocation API](https://developers.google.com/maps/documentation/geolocation/intro)
 
 ---
 
-Uses command line access to WiFi information via
-[Mozilla Location Services API](https://ichnaea.readthedocs.io/en/latest/api/geolocate.html?highlight=macaddress#wifi-access-point-fields)
-from Python.
+Uses command line access to WiFi information from Python.
 The command line programs used to access WiFi information include:
 
 * Linux: [nmcli](https://developer.gnome.org/NetworkManager/stable/nmcli.html) NetworkManager
@@ -45,9 +48,10 @@ python -m mozloc
 ```
 
 Shows `time` `lat` `lng` `accuracy` `N BSSIDs heard`.
-In urban areas, accuracy of less than 100 meters is possible.
 
-dump raw signals, without using API:
+When Mozilla Location Services were available, accuracy better than 100 meters was possible.
+
+Dump raw signals, without using API:
 
 ```sh
 python -m mozloc --dump
@@ -83,7 +87,8 @@ E.g.
 
 ## TODO
 
-Would like to add Bluetooth beacons. Need to use a new location service.
+* Would like to add Bluetooth beacons. 
+* Need to use a new location service.
 
 ## Notes
 
