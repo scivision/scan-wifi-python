@@ -1,6 +1,7 @@
-""" MacOS airport functions
+""" macOS airport functions
 
-Airport was removed from macOS 14.4+, so these functions no longer are relevant.
+Airport was removed from macOS 14.4+.
+Newer macOS use macos_corelocation.py instead.
 """
 
 import logging
@@ -12,7 +13,7 @@ import pandas
 from .exe import get_airport, running_as_root
 
 
-def cli_config_check() -> bool:
+def config_check() -> bool:
     # %% check that Airport is available and WiFi is active
 
     try:
@@ -32,7 +33,7 @@ def cli_config_check() -> bool:
     return False
 
 
-def get_signal() -> str:
+def scan_signal() -> str:
     try:
         ret = subprocess.check_output([get_airport(), "--scan"], text=True, timeout=30)
     except subprocess.CalledProcessError as err:
@@ -41,7 +42,7 @@ def get_signal() -> str:
     return ret
 
 
-def parse_signal(raw: str) -> pandas.DataFrame:
+def get_signal(raw: str):
     isroot = running_as_root()
 
     psudo = r"\s*([0-9a-zA-Z\s\-\.]+)\s+([0-9a-f]{2}(?::[0-9a-f]{2}){5})\s+(-\d{2,3})"

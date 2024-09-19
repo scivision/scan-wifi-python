@@ -10,7 +10,7 @@ import pandas
 from .exe import get_exe
 
 
-def cli_config_check() -> bool:
+def config_check() -> bool:
     # %% check that NetworkManager CLI is available and WiFi is active
     exe = get_exe("nmcli")
 
@@ -35,7 +35,7 @@ nmcli radio wifi on"""
     return False
 
 
-def get_signal() -> str:
+def scan_signal() -> str:
     exe = get_exe("nmcli")
 
     cmd = [exe, "-g", "SSID,BSSID,FREQ,SIGNAL", "device", "wifi"]
@@ -61,7 +61,7 @@ def get_signal() -> str:
     return ret
 
 
-def parse_signal(raw: str) -> pandas.DataFrame:
+def get_signal(raw: str):
     dat = pandas.read_csv(
         io.StringIO(raw),
         sep=r"(?<!\\):",

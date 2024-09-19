@@ -9,7 +9,7 @@ import pandas
 from .exe import get_exe
 
 
-def cli_config_check() -> bool:
+def config_check() -> bool:
     # %% check that NetSH EXE is available and WiFi is active
     exe = get_exe("netsh")
 
@@ -35,7 +35,7 @@ def cli_config_check() -> bool:
     return False
 
 
-def get_signal() -> str:
+def scan_signal() -> str:
     """
     get signal strength using EXE
 
@@ -52,7 +52,7 @@ def get_signal() -> str:
     return ret
 
 
-def parse_signal(raw: str) -> pandas.DataFrame:
+def get_signal(raw: str):
     dat: list[dict[str, str]] = []
     out = io.StringIO(raw)
 

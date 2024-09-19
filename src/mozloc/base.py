@@ -1,9 +1,10 @@
+from __future__ import annotations
 from time import sleep
 from pathlib import Path
 import logging
 from pprint import pprint
 
-from .modules import get_signal, parse_signal, cli_config_check
+from .modules import get_signal, scan_signal, config_check
 from .web import get_loc_mozilla
 
 HEADER = "time                lat        lon         accuracy NumBSSIDs"
@@ -15,7 +16,7 @@ def process_file(file: Path, mozilla_url: str):
     """
 
     raw = Path(file).expanduser().read_text()
-    dat = parse_signal(raw)
+    dat = get_signal(raw)
     pprint(dat)
     loc = get_loc_mozilla(dat, url=mozilla_url)
 
@@ -33,13 +34,13 @@ def log_wifi_loc(cadence_sec: float, mozilla_url: str, logfile: Path | None = No
     print(f"updating every {cadence_sec} seconds")
     print(HEADER)
 
-    if not cli_config_check():
+    if not config_check():
         raise ConnectionError("Could not connect to WiFi hardware")
     # nmcli errored for less than about 0.2 sec.
     sleep(0.5)
     while True:
-        raw = get_signal()
-        dat = parse_signal(raw)
+        raw = scan_signal()
+        dat = get_signal(raw)
         if len(dat) < 2:
             logging.warning(f"cannot locate since at least 2 BSSIDs required\n{dat}")
             sleep(cadence_sec)

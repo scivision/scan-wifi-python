@@ -11,7 +11,7 @@ import argparse
 from pprint import pprint
 
 from .base import log_wifi_loc, process_file
-from .modules import parse_signal, get_signal
+from .modules import scan_signal, get_signal
 
 
 p = argparse.ArgumentParser()
@@ -35,7 +35,7 @@ p.add_argument("-i", "--infile", help="use raw text saved from command line")
 args = p.parse_args()
 
 if args.dump:
-    pprint(parse_signal(get_signal()))
+    pprint(get_signal(scan_signal()))
 elif args.infile:
     process_file(args.infile, mozilla_url=args.url)
 else:
